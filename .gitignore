@@ -1,0 +1,31 @@
+# === Binários e Executáveis ===
+simulador_cache
+*.exe
+*.out
+*.app
+
+# === Arquivos Objeto e Temporários de Compilação ===
+*.o
+*.obj
+
+# === Debuggers ===
+*.dSYM/
+*.gdb_history
+
+# === Editores de Código e IDEs ===
+# Visual Studio Code
+.vscode/
+.history/
+
+# CLion / JetBrains
+.idea/
+cmake-build-*/
+
+# Arquivos temporários do Linux/macOS/Windows
+.DS_Store
+Thumbs.db
+*~
+*.swp
+
+# === Logs ===
+*.log

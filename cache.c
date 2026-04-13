@@ -1,4 +1,5 @@
 #include "cache.h"
+#include "lru.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -54,6 +55,8 @@ void inicializa_cache_dados(CacheDados *cache)
 			cache->sets[i].linhas[j].tag = 0;
 			cache->sets[i].linhas[j].lru_estado = 0;
 		}
+		cache->sets[i].lru_estado[0] = 0;
+		cache->sets[i].lru_estado[1] = 0;
 	}
 
 	cache->hits = 0;
@@ -86,6 +89,8 @@ void inicializa_cache_unificada(CacheUnificada *cache)
 			cache->sets[i].linhas[j].tag = 0;
 			cache->sets[i].linhas[j].lru_estado = 0;
 		}
+		cache->sets[i].lru_estado[0] = 0;
+		cache->sets[i].lru_estado[1] = 0;
 	}
 
 	cache->hits = 0;
@@ -100,6 +105,8 @@ void imprime_cache_dados(CacheDados *cache)
 	for (int i = 0; i < NUM_SETS_DADOS; i++)
 	{
 		printf("Set %d:\n", i);
+		printf("--- SET_LRU [%d][%d] \n", cache->sets[i].lru_estado[0], cache->sets[i].lru_estado[1]);
+
 
 		for (int j = 0; j < ASSOCIATIVITY_DADOS; j++)
 		{
@@ -195,7 +202,7 @@ void insere_bloco_no_set_dados(CacheDados *cache, RequisicaoMemoria *req, int li
 {
 	cache->sets[req->set].linhas[linha_escolhida].valid = 1;
 	cache->sets[req->set].linhas[linha_escolhida].tag = req->tag;
-	cache->sets[req->set].linhas[linha_escolhida].lru_estado = 0;
+	//cache->sets[req->set].linhas[linha_escolhida].lru_estado = 0; //o LRU vai alterar isso
 }
 void acessa_cache_dados(CacheDados *cache, unsigned int endereco)
 {
@@ -210,6 +217,7 @@ void acessa_cache_dados(CacheDados *cache, unsigned int endereco)
 	if (linha_hit != -1)
 	{
 		cache->hits++;
+		atualizaLru(cache, &req);
 		printf("\nHIT na cache de dados! Set %u, linha %d\n", req.set, linha_hit);
 		return;
 	}
@@ -222,11 +230,15 @@ void acessa_cache_dados(CacheDados *cache, unsigned int endereco)
 	if (linha_invalida != -1)
 	{
 		insere_bloco_no_set_dados(cache, &req, linha_invalida);
+		atualizaLru(cache, &req);
 		printf("Bloco inserido no set %u, linha %d\n", req.set, linha_invalida);
 	}
 	else
 	{
 		printf("Set %u cheio. Substituicao ainda nao implementada.\n", req.set);
+		aplicaLru(cache, &req);
+		acessa_cache_dados(cache, endereco);
+
 	}
 }
 

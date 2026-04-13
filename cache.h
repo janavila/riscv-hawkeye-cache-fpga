@@ -1,3 +1,6 @@
+#ifndef CACHE_H
+#define CACHE_H
+
 /* =========================
    PARÂMETROS DA CACHE L1 DADOS
    ========================= */
@@ -38,6 +41,7 @@ typedef struct
 typedef struct
 {
 	LinhaCache linhas[ASSOCIATIVITY_DADOS];
+   unsigned int lru_estado [2];
 } SetCacheDados;
 
 /* =========================
@@ -47,6 +51,7 @@ typedef struct
 typedef struct
 {
 	LinhaCache linhas[ASSOCIATIVITY_UNIFICADA];
+   unsigned int lru_estado [2];
 } SetCacheUnificada;
 
 /* =========================
@@ -95,3 +100,5 @@ void imprime_requisicao(RequisicaoMemoria *req);
 void imprime_cache_dados(CacheDados *cache);
 void acessa_cache_dados(CacheDados *cache, unsigned int endereco);
 void imprime_set_dados(CacheDados *cache, int set);
+
+#endif /* CACHE_H */
