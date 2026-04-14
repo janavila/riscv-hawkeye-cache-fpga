@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 /* =========================================================
    FUNÇÃO DE REQUISIÇÃO DE ENDEREÇO - CACHE DE DADOS
    ========================================================= */
@@ -107,7 +106,6 @@ void imprime_cache_dados(CacheDados *cache)
 		printf("Set %d:\n", i);
 		printf("--- SET_LRU [%d][%d] \n", cache->sets[i].lru_estado[0], cache->sets[i].lru_estado[1]);
 
-
 		for (int j = 0; j < ASSOCIATIVITY_DADOS; j++)
 		{
 			printf("  Linha %d -> valid: %d | tag: %u | lru: %d\n",
@@ -202,13 +200,14 @@ void insere_bloco_no_set_dados(CacheDados *cache, RequisicaoMemoria *req, int li
 {
 	cache->sets[req->set].linhas[linha_escolhida].valid = 1;
 	cache->sets[req->set].linhas[linha_escolhida].tag = req->tag;
-	//cache->sets[req->set].linhas[linha_escolhida].lru_estado = 0; //o LRU vai alterar isso
+	// cache->sets[req->set].linhas[linha_escolhida].lru_estado = 0; //o LRU vai alterar isso
 }
 void acessa_cache_dados(CacheDados *cache, unsigned int endereco)
 {
 	RequisicaoMemoria req;
 	int linha_hit;
 	int linha_invalida;
+	int linha_vitima;
 
 	req = requisita_endereco_dados(endereco);
 
@@ -235,10 +234,18 @@ void acessa_cache_dados(CacheDados *cache, unsigned int endereco)
 	}
 	else
 	{
-		printf("Set %u cheio. Substituicao ainda nao implementada.\n", req.set);
-		aplicaLru(cache, &req);
-		acessa_cache_dados(cache, endereco);
+		linha_vitima = aplicaLru(cache, &req);
 
+		if (linha_vitima != -1)
+		{
+			insere_bloco_no_set_dados(cache, &req, linha_vitima);
+			atualizaLru(cache, &req);
+			printf("LRU aplicada no set %u, nova insercao na linha %d\n", req.set, linha_vitima);
+		}
+		else
+		{
+			printf("Erro: nenhuma vitima encontrada pela LRU no set %u\n", req.set);
+		}
 	}
 }
 

@@ -7,9 +7,8 @@
    PROTOTIPOS DAS FUNCOES
    ========================= */
 
-void atualizaLru (CacheDados *cache, RequisicaoMemoria *req);
-void aplicaLru(CacheDados *cache, RequisicaoMemoria *req);
-
+void atualizaLru(CacheDados *cache, RequisicaoMemoria *req);
+int aplicaLru(CacheDados *cache, RequisicaoMemoria *req);
 
 /* =========================
    PROTOTIPOS DAS FUNCOES
@@ -25,4 +24,4 @@ void imprime_set_dados(CacheDados *cache, int set);
 
  */
 
- #endif /* LRU_H */
+#endif /* LRU_H */
