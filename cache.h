@@ -117,5 +117,8 @@ int consulta_cache_unificada(CacheUnificada *cache, unsigned int endereco);
 void insere_endereco_na_l1(CacheDados *cache, unsigned int endereco);
 void insere_endereco_na_l2(CacheUnificada *cache, unsigned int endereco);
 
+void atualiza_lru_unificada(CacheUnificada *cache, RequisicaoMemoria *req, int linha_acessada);
+int escolhe_vitima_lru_unificada(CacheUnificada *cache, RequisicaoMemoria *req);
+
 void acessa_hierarquia_memoria(CacheDados *cache_dados, CacheUnificada *cache_unificada, unsigned int endereco);
 #endif /* CACHE_H */

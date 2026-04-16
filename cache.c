@@ -323,6 +323,7 @@ void acessa_cache_unificada(CacheUnificada *cache, unsigned int endereco)
 	RequisicaoMemoria req;
 	int linha_hit;
 	int linha_invalida;
+	int linha_vitima;
 
 	req = requisita_endereco_unificada(endereco);
 
@@ -331,6 +332,7 @@ void acessa_cache_unificada(CacheUnificada *cache, unsigned int endereco)
 	if (linha_hit != -1)
 	{
 		cache->hits++;
+		atualiza_lru_unificada(cache, &req, linha_hit);
 		printf("\nHIT na cache unificada! Set %u, linha %d\n", req.set, linha_hit);
 		return;
 	}
@@ -343,14 +345,29 @@ void acessa_cache_unificada(CacheUnificada *cache, unsigned int endereco)
 	if (linha_invalida != -1)
 	{
 		insere_bloco_no_set_unificada(cache, &req, linha_invalida);
+		atualiza_lru_unificada(cache, &req, linha_invalida);
 		printf("Bloco inserido na cache unificada no set %u, linha %d\n", req.set, linha_invalida);
 	}
 	else
 	{
-		printf("Set %u da cache unificada cheio. Substituicao ainda nao implementada.\n", req.set);
+		linha_vitima = escolhe_vitima_lru_unificada(cache, &req);
+
+		if (linha_vitima != -1)
+		{
+			cache->sets[req.set].linhas[linha_vitima].valid = 1;
+			cache->sets[req.set].linhas[linha_vitima].tag = req.tag;
+			cache->sets[req.set].linhas[linha_vitima].lru_estado = 0;
+
+			atualiza_lru_unificada(cache, &req, linha_vitima);
+
+			printf("LRU aplicada na cache unificada, nova insercao no set %u, linha %d\n", req.set, linha_vitima);
+		}
+		else
+		{
+			printf("Erro: nenhuma vitima encontrada pela LRU na L2 no set %u\n", req.set);
+		}
 	}
 }
-
 void imprime_set_unificada(CacheUnificada *cache, int set)
 {
 	if (set < 0 || set >= NUM_SETS_UNIFICADA)
@@ -387,24 +404,6 @@ int consulta_cache_dados(CacheDados *cache, unsigned int endereco)
 	}
 
 	printf("\nMISS na L1 (cache de dados)! Endereco %u\n", endereco);
-	return 0;
-}
-
-int consulta_cache_unificada(CacheUnificada *cache, unsigned int endereco)
-{
-	RequisicaoMemoria req;
-	int linha_hit;
-
-	req = requisita_endereco_unificada(endereco);
-	linha_hit = busca_hit_no_set_unificada(cache, &req);
-
-	if (linha_hit != -1)
-	{
-		printf("HIT na L2 (cache unificada)! Set %u, linha %d\n", req.set, linha_hit);
-		return 1;
-	}
-
-	printf("MISS na L2 (cache unificada)! Endereco %u\n", endereco);
 	return 0;
 }
 
@@ -488,6 +487,7 @@ void insere_endereco_na_l2(CacheUnificada *cache, unsigned int endereco)
 {
 	RequisicaoMemoria req;
 	int linha_invalida;
+	int linha_vitima;
 
 	req = requisita_endereco_unificada(endereco);
 
@@ -496,10 +496,74 @@ void insere_endereco_na_l2(CacheUnificada *cache, unsigned int endereco)
 	if (linha_invalida != -1)
 	{
 		insere_bloco_no_set_unificada(cache, &req, linha_invalida);
+		atualiza_lru_unificada(cache, &req, linha_invalida);
 		printf("Bloco inserido na L2 no set %u, linha %d\n", req.set, linha_invalida);
 	}
 	else
 	{
-		printf("Set %u da L2 cheio. Substituicao ainda nao implementada.\n", req.set);
+		linha_vitima = escolhe_vitima_lru_unificada(cache, &req);
+
+		cache->sets[req.set].linhas[linha_vitima].valid = 1;
+		cache->sets[req.set].linhas[linha_vitima].tag = req.tag;
+
+		atualiza_lru_unificada(cache, &req, linha_vitima);
+
+		printf("LRU aplicada na L2, nova insercao no set %u, linha %d\n", req.set, linha_vitima);
 	}
+}
+void atualiza_lru_unificada(CacheUnificada *cache, RequisicaoMemoria *req, int linha_acessada)
+{
+	for (int i = 0; i < ASSOCIATIVITY_UNIFICADA; i++)
+	{
+		if (cache->sets[req->set].linhas[i].valid == 1)
+		{
+			if (i == linha_acessada)
+			{
+				cache->sets[req->set].linhas[i].lru_estado = 0;
+			}
+			else
+			{
+				cache->sets[req->set].linhas[i].lru_estado++;
+			}
+		}
+	}
+}
+
+int escolhe_vitima_lru_unificada(CacheUnificada *cache, RequisicaoMemoria *req)
+{
+	int linha_vitima = -1;
+	int maior_idade = -1;
+
+	for (int i = 0; i < ASSOCIATIVITY_UNIFICADA; i++)
+	{
+		if (cache->sets[req->set].linhas[i].valid == 1)
+		{
+			if (cache->sets[req->set].linhas[i].lru_estado > maior_idade)
+			{
+				maior_idade = cache->sets[req->set].linhas[i].lru_estado;
+				linha_vitima = i;
+			}
+		}
+	}
+
+	return linha_vitima;
+}
+
+int consulta_cache_unificada(CacheUnificada *cache, unsigned int endereco)
+{
+	RequisicaoMemoria req;
+	int linha_hit;
+
+	req = requisita_endereco_unificada(endereco);
+	linha_hit = busca_hit_no_set_unificada(cache, &req);
+
+	if (linha_hit != -1)
+	{
+		atualiza_lru_unificada(cache, &req, linha_hit);
+		printf("HIT na L2 (cache unificada)! Set %u, linha %d\n", req.set, linha_hit);
+		return 1;
+	}
+
+	printf("MISS na L2 (cache unificada)! Endereco %u\n", endereco);
+	return 0;
 }
