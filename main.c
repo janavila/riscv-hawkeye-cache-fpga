@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <time.h>
 #include "cache.h"
+#include "file_io.h"
 
 /* =========================
    MAIN
@@ -31,6 +33,8 @@ int main()
 		printf("7 - Acessar cache unificada (L2 isolada)\n");
 		printf("8 - Mostrar um set especifico da L2\n");
 		printf("9 - Acessar hierarquia completa (L1 -> L2 -> memoria)\n");
+		printf("10 - Ler endereços de um arquivo e processar na hierarquia\n");
+		printf("11 - Salvar um exemplo de arquivo de teste\n");
 		printf("0 - Sair\n");
 		printf("Opcao: ");
 
@@ -138,7 +142,50 @@ int main()
 			}
 			acessa_hierarquia_memoria(&cache_dados, &cache_unificada, endereco);
 			break;
+		case 10: {
+			char nome_arq;
+			printf("Digite o nome do arquivo: ");
+			scanf("%s", nome_arq);
+			VetorInteiros v = le_vetor_de_arquivo(nome_arq);
+			if (v.dados != NULL) {
+				printf("Processando %zu endereços...\n", v.tamanho);
+				for (size_t i = 0; i < v.tamanho; i++) {
+					// Converte de int para unsigned int e acessa a hierarquia
+					acessa_hierarquia_memoria(&cache_dados, &cache_unificada, (unsigned int)v.dados[i]);
+				}
+				libera_vetor(&v); // Importante para evitar vazamento de memória
+			}
+			break;
+		}
 
+		case 11: {
+			int n;
+			char nome_arq;
+			printf("Quantos endereços aleatórios deseja gerar? ");
+			if (scanf("%d", &n) != 1 || n <= 0) {
+				printf("Quantidade inválida!\n");
+				while (getchar() != '\n');
+				break;
+			}
+			printf("Digite o nome do arquivo para salvar (ex: random_trace.txt): ");
+			scanf("%s", nome_arq);
+			// Aloca memória para os valores
+			int *enderecos_aleatorios = (int *)malloc(n * sizeof(int));
+			if (enderecos_aleatorios == NULL) {
+				printf("Erro de memória!\n");
+				break;
+			}
+			srand(time(NULL));
+			for (int i = 0; i < n; i++) {
+				// Gera endereços entre 0 e 65535
+				enderecos_aleatorios[i] = rand() % 65536; 
+			}
+			if (salva_vetor_em_arquivo(nome_arq, enderecos_aleatorios, (size_t)n) == 0) {
+				printf("%d endereços aleatórios foram gerados e salvos com sucesso!\n", n);
+			}
+			free(enderecos_aleatorios);
+			break;
+		}	
 		case 0:
 			printf("Encerrando...\n");
 			break;
