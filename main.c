@@ -143,7 +143,7 @@ int main()
 			acessa_hierarquia_memoria(&cache_dados, &cache_unificada, endereco);
 			break;
 		case 10: {
-			char nome_arq;
+			char nome_arq[100];
 			printf("Digite o nome do arquivo: ");
 			scanf("%s", nome_arq);
 			VetorInteiros v = le_vetor_de_arquivo(nome_arq);
@@ -160,7 +160,7 @@ int main()
 
 		case 11: {
 			int n;
-			char nome_arq;
+			char nome_arq[100];
 			printf("Quantos endereços aleatórios deseja gerar? ");
 			if (scanf("%d", &n) != 1 || n <= 0) {
 				printf("Quantidade inválida!\n");

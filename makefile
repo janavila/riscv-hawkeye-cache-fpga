@@ -25,7 +25,7 @@ $(TARGET): $(OBJS)
 
 # Regras de compilação dos objetos
 # O comando abaixo diz que cada .o depende de seu respectivo .c e dos headers
-main.o: main.c cache.h lru.h 
+main.o: main.c cache.h lru.h file_io.h
 	$(CC) $(CFLAGS) -c main.c
 
 cache.o: cache.c cache.h
