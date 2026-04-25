@@ -13,3 +13,9 @@ Compilação & execução
 ->Benchmark + trace padronizado para nosso simulador
     ->gcc -Wall benchmark_trace.c -o benchmark_trace
     ->./benchmark_trace
+
+-> Modo de uso. 
+--> Executar o benchmark (Ex: opção 5)
+--> Executar simulador
+---> Opção 10
+---> Digite qual trace deseja executar
