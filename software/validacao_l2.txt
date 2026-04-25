@@ -1,0 +1,109 @@
+## TRACE DE VALIDAÇÃO — CACHE L2 (Cache Unificada)
+## L2: 32KB, blocos 64B, 8-way, 64 sets
+## Fórmulas: bloco = end/64 | set = bloco%64 | tag = bloco/64
+##
+## IMPORTANTE: este trace deve ser rodado com a opção de acesso
+## à L2 ISOLADA (opção 7 do menu), não pela hierarquia completa.
+## Assim isolamos o comportamento da L2 sem interferência da L1.
+##
+## ============================================================
+## SET 0 — endereços múltiplos de 4096 (cada um é um bloco diferente)
+## end=0     → bloco0  → set0, tag0
+## end=4096  → bloco64 → set0, tag1
+## end=8192  → bloco128→ set0, tag2
+## end=12288 → bloco192→ set0, tag3
+## end=16384 → bloco256→ set0, tag4
+## end=20480 → bloco320→ set0, tag5
+## end=24576 → bloco384→ set0, tag6
+## end=28672 → bloco448→ set0, tag7
+## end=32768 → bloco512→ set0, tag8  ← 9o bloco, força eviction
+## ============================================================
+##
+## Fase 1: preenche as 8 linhas do set (8 misses frios)
+## Acesso 1:  end=0     → MISS frio → insere tag0 na linha0
+## Acesso 2:  end=4096  → MISS frio → insere tag1 na linha1
+## Acesso 3:  end=8192  → MISS frio → insere tag2 na linha2
+## Acesso 4:  end=12288 → MISS frio → insere tag3 na linha3
+## Acesso 5:  end=16384 → MISS frio → insere tag4 na linha4
+## Acesso 6:  end=20480 → MISS frio → insere tag5 na linha5
+## Acesso 7:  end=24576 → MISS frio → insere tag6 na linha6
+## Acesso 8:  end=28672 → MISS frio → insere tag7 na linha7
+##
+0
+4096
+8192
+12288
+16384
+20480
+24576
+28672
+##
+## Fase 2: hits nas 8 linhas (8 hits)
+## Acesso 9:  end=0     → HIT tag0
+## Acesso 10: end=8192  → HIT tag2
+## Acesso 11: end=16384 → HIT tag4
+## Acesso 12: end=24576 → HIT tag6
+## Acesso 13: end=4096  → HIT tag1
+## Acesso 14: end=12288 → HIT tag3
+## Acesso 15: end=20480 → HIT tag5
+## Acesso 16: end=28672 → HIT tag7
+##
+0
+8192
+16384
+24576
+4096
+12288
+20480
+28672
+##
+## Fase 3: força eviction — 9o bloco diferente no set0
+## Após acessos 9-16, a linha com maior idade (lru_estado)
+## é a que não foi tocada por mais tempo.
+## A ordem dos hits na fase 2 foi: tag0,2,4,6,1,3,5,7
+## Portanto a linha mais antiga ao chegar no acesso 17 é tag0
+## (foi a 1a a ser inserida e a 1a a receber hit, mas depois
+## todas as outras foram acessadas mais recentemente).
+##
+## Acesso 17: end=32768 → MISS → evicta a linha com maior idade → lru_estado
+## Acesso 18: end=0     → MISS → tag0 foi evictada no passo anterior
+##
+32768
+0
+##
+## SET 0: Fase1=8 misses | Fase2=8 hits | Fase3=2 misses
+## Total SET0: 8 hits, 10 misses
+##
+## ============================================================
+## SET 1 — endereços com bloco%64 == 1
+## end=64    → bloco1  → set1, tag0
+## end=4160  → bloco65 → set1, tag1
+## end=8256  → bloco129→ set1, tag2
+## ============================================================
+##
+## Teste simples: 3 misses frios, depois hits e 1 eviction
+##
+## Acesso 19: end=64   → MISS frio → linha0
+## Acesso 20: end=4160 → MISS frio → linha1
+## Acesso 21: end=8256 → MISS frio → linha2
+## Acesso 22: end=64   → HIT  → lru_estado=0
+## Acesso 23: end=4160 → HIT  → lru_estado=0
+## Acesso 24: end=64   → HIT  → lru_estado=0
+## Acesso 25: end=8256 → HIT  → lru_estado=0
+##
+64
+4160
+8256
+64
+4160
+64
+8256
+##
+## SET1: 3 misses, 4 hits
+##
+## ============================================================
+## TOTAL ESPERADO NA L2
+## Hits  : 8 + 4 = 12
+## Misses: 10 + 3 = 13
+## Hit Rate: 12/25 = 48%
+## ============================================================

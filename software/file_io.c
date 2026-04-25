@@ -1,6 +1,7 @@
 #include "file_io.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h> 
 
 /* =========================================================
    SALVA VETOR EM ARQUIVO
@@ -58,46 +59,63 @@ VetorInteiros le_vetor_de_arquivo(const char *nome_arquivo)
         return resultado;
     }
 
-    /* --- 1a passagem: conta os numeros --- */
-    int valor_temp;
+    char linha[256];
     size_t contador = 0;
-
-    while (fscanf(arquivo, "%d", &valor_temp) == 1)
+ 
+    /* --- 1a passagem: conta linhas válidas (não comentário, não vazia) --- */
+    while (fgets(linha, sizeof(linha), arquivo) != NULL)
     {
-        contador++;
+        /* encontra o primeiro caractere não-espaço da linha */
+        char *p = linha;
+        while (*p && isspace((unsigned char)*p)) p++;
+ 
+        /* pula linha vazia ou comentário */
+        if (*p == '\0' || *p == '#') continue;
+ 
+        /* verifica se a linha contém um inteiro válido */
+        int valor;
+        if (sscanf(p, "%d", &valor) == 1)
+            contador++;
     }
-
+ 
     if (contador == 0)
     {
-        printf("Aviso: arquivo '%s' esta vazio ou nao contem inteiros validos.\n", nome_arquivo);
+        printf("Aviso: arquivo '%s' nao contem enderecos validos.\n", nome_arquivo);
         fclose(arquivo);
         return resultado;
     }
-
+ 
     /* --- Aloca vetor com tamanho exato --- */
     resultado.dados = (int *)malloc(contador * sizeof(int));
-
     if (resultado.dados == NULL)
     {
         printf("Erro: falha ao alocar memoria para %zu elementos.\n", contador);
         fclose(arquivo);
         return resultado;
     }
-
-    /* --- 2a passagem: volta ao inicio e le os valores --- */
+ 
+    /* --- 2a passagem: relê e armazena os valores --- */
     rewind(arquivo);
-
-    for (size_t i = 0; i < contador; i++)
+    size_t idx = 0;
+ 
+    while (fgets(linha, sizeof(linha), arquivo) != NULL && idx < contador)
     {
-        fscanf(arquivo, "%d", &resultado.dados[i]);
+        char *p = linha;
+        while (*p && isspace((unsigned char)*p)) p++;
+ 
+        if (*p == '\0' || *p == '#') continue;
+ 
+        int valor;
+        if (sscanf(p, "%d", &valor) == 1)
+            resultado.dados[idx++] = valor;
     }
-
-    resultado.tamanho = contador;
-
+ 
+    resultado.tamanho = idx;
     fclose(arquivo);
-
-    printf("Arquivo '%s' lido com sucesso (%zu elementos).\n", nome_arquivo, contador);
-    return resultado;
+ 
+    printf("Arquivo '%s' lido com sucesso (%zu enderecos, comentarios ignorados).\n",
+           nome_arquivo, resultado.tamanho);
+    return resultado;  
 }
 
 /* =========================================================

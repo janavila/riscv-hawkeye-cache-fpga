@@ -112,16 +112,76 @@ int main()
 			break;
 
 		case 7:
-			printf("Digite um endereco de memoria: ");
-			if (scanf("%u", &endereco) != 1)
-			{
-				printf("Entrada invalida!\n");
-				while (getchar() != '\n')
-					;
-				break;
-			}
-			acessa_cache_unificada(&cache_unificada, endereco);
-			break;
+			int sub;
+                printf("\n--- ACESSO A L2 ISOLADA ---\n");
+                printf("  1 - Digitar endereco manualmente\n");
+                printf("  2 - Ler enderecos de um arquivo\n");
+                printf("  Opcao: ");
+ 
+                if (scanf("%d", &sub) != 1)
+                {
+                    printf("Entrada invalida!\n");
+                    while (getchar() != '\n');
+                    break;
+                }
+ 
+                if (sub == 1)
+                {
+                    /* ---- entrada manual ---- */
+                    printf("Digite um endereco de memoria: ");
+                    if (scanf("%u", &endereco) != 1)
+                    {
+                        printf("Entrada invalida!\n");
+                        while (getchar() != '\n');
+                        break;
+                    }
+                    acessa_cache_unificada(&cache_unificada, endereco);
+                }
+                else if (sub == 2)
+                {
+                    /* ---- leitura de arquivo ---- */
+                    char nome_arq[100];
+                    printf("Digite o nome do arquivo: ");
+                    scanf("%s", nome_arq);
+ 
+                    VetorInteiros v = le_vetor_de_arquivo(nome_arq);
+ 
+                    if (v.dados != NULL)
+                    {
+                        printf("Processando %zu enderecos na L2 isolada...\n", v.tamanho);
+ 
+                        /* zera contadores antes de rodar o trace */
+                        cache_unificada.hits   = 0;
+                        cache_unificada.misses = 0;
+ 
+                        for (size_t i = 0; i < v.tamanho; i++)
+                        {
+                            acessa_cache_unificada(&cache_unificada,
+                                                   (unsigned int)v.dados[i]);
+                        }
+ 
+                        libera_vetor(&v);
+ 
+                        /* resumo */
+                        unsigned long total = cache_unificada.hits + cache_unificada.misses;
+ 
+                        printf("\n╔══════════════════════════════════════════╗\n");
+                        printf(  "║     RESUMO — L2 ISOLADA: %-14s║\n", nome_arq);
+                        printf(  "╠══════════════════════════════════════════╣\n");
+                        printf(  "║  Acessos : %-30lu║\n", total);
+                        printf(  "║  Hits    : %-30lu║\n", cache_unificada.hits);
+                        printf(  "║  Misses  : %-30lu║\n", cache_unificada.misses);
+                        if (total > 0)
+                            printf("║  Hit Rate: %-29.2f%%║\n",
+                                   100.0 * cache_unificada.hits / total);
+                        printf(  "╚══════════════════════════════════════════╝\n");
+                    }
+                }
+                else
+                {
+                    printf("Opcao invalida!\n");
+                }
+                break;
 
 		case 8:
 			printf("Digite o numero do set da L2: ");
