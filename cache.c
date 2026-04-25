@@ -216,7 +216,7 @@ void acessa_cache_dados(CacheDados *cache, unsigned int endereco)
 	if (linha_hit != -1)
 	{
 		cache->hits++;
-		atualizaLru(cache, &req);
+		atualizaLru(cache, &req, linha_hit);
 		printf("\nHIT na cache de dados! Set %u, linha %d\n", req.set, linha_hit);
 		return;
 	}
@@ -229,7 +229,7 @@ void acessa_cache_dados(CacheDados *cache, unsigned int endereco)
 	if (linha_invalida != -1)
 	{
 		insere_bloco_no_set_dados(cache, &req, linha_invalida);
-		atualizaLru(cache, &req);
+		atualizaLru(cache, &req, linha_invalida);
 		printf("Bloco inserido no set %u, linha %d\n", req.set, linha_invalida);
 	}
 	else
@@ -239,7 +239,7 @@ void acessa_cache_dados(CacheDados *cache, unsigned int endereco)
 		if (linha_vitima != -1)
 		{
 			insere_bloco_no_set_dados(cache, &req, linha_vitima);
-			atualizaLru(cache, &req);
+			atualizaLru(cache, &req, linha_vitima);
 			printf("LRU aplicada no set %u, nova insercao na linha %d\n", req.set, linha_vitima);
 		}
 		else
@@ -398,7 +398,7 @@ int consulta_cache_dados(CacheDados *cache, unsigned int endereco)
 
 	if (linha_hit != -1)
 	{
-		atualizaLru(cache, &req);
+		atualizaLru(cache, &req, linha_hit);
 		printf("\nHIT na L1 (cache de dados)! Set %u, linha %d\n", req.set, linha_hit);
 		return 1;
 	}
@@ -463,7 +463,7 @@ void insere_endereco_na_l1(CacheDados *cache, unsigned int endereco)
 	if (linha_invalida != -1)
 	{
 		insere_bloco_no_set_dados(cache, &req, linha_invalida);
-		atualizaLru(cache, &req);
+		atualizaLru(cache, &req, linha_invalida);
 		printf("Bloco inserido na L1 no set %u, linha %d\n", req.set, linha_invalida);
 	}
 	else
@@ -473,7 +473,7 @@ void insere_endereco_na_l1(CacheDados *cache, unsigned int endereco)
 		if (linha_vitima != -1)
 		{
 			insere_bloco_no_set_dados(cache, &req, linha_vitima);
-			atualizaLru(cache, &req);
+			atualizaLru(cache, &req, linha_vitima);
 			printf("LRU aplicada na L1, nova insercao no set %u, linha %d\n", req.set, linha_vitima);
 		}
 		else

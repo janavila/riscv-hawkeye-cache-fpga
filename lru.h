@@ -7,7 +7,7 @@
    PROTOTIPOS DAS FUNCOES
    ========================= */
 
-void atualizaLru(CacheDados *cache, RequisicaoMemoria *req);
+void atualizaLru(CacheDados *cache, RequisicaoMemoria *req, int linha_acessada);
 int aplicaLru(CacheDados *cache, RequisicaoMemoria *req);
 
 /* =========================
