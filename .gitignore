@@ -29,3 +29,10 @@ Thumbs.db
 
 # === Logs ===
 *.log
+
+# === Arquivos especificos === 
+trace_conv.txt
+trace_linkedlist.txt
+trace_pattern.txt
+trace_streaming.txt
+teste.txt

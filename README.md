@@ -8,3 +8,8 @@ Compilação & execução
 
 -> Linux
     -> make run
+
+
+->Benchmark + trace padronizado para nosso simulador
+    ->gcc -Wall benchmark_trace.c -o benchmark_trace
+    ->./benchmark_trace

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <time.h>
+#include <windows.h>
 #include "cache.h"
 #include "file_io.h"
 
@@ -11,6 +12,9 @@
 
 int main()
 {
+	//config do console para UTF-8
+    SetConsoleOutputCP(65001);
+    SetConsoleCP(65001);
 	CacheDados cache_dados;
 	CacheUnificada cache_unificada;
 	int opcao;
@@ -143,18 +147,80 @@ int main()
 			acessa_hierarquia_memoria(&cache_dados, &cache_unificada, endereco);
 			break;
 		case 10: {
-			char nome_arq[100];
-			printf("Digite o nome do arquivo: ");
-			scanf("%s", nome_arq);
-			VetorInteiros v = le_vetor_de_arquivo(nome_arq);
-			if (v.dados != NULL) {
-				printf("Processando %zu endereços...\n", v.tamanho);
-				for (size_t i = 0; i < v.tamanho; i++) {
-					// Converte de int para unsigned int e acessa a hierarquia
-					acessa_hierarquia_memoria(&cache_dados, &cache_unificada, (unsigned int)v.dados[i]);
-				}
-				libera_vetor(&v); // Importante para evitar vazamento de memória
-			}
+                char nome_arq[100];
+                printf("Digite o nome do arquivo: ");
+                scanf("%s", nome_arq);
+ 
+                VetorInteiros v = le_vetor_de_arquivo(nome_arq);
+ 
+                if (v.dados != NULL)
+                {
+                    printf("Processando %zu enderecos...\n", v.tamanho);
+ 
+                    /* zera contadores antes de rodar o trace */
+                    cache_dados.hits        = 0;
+                    cache_dados.misses      = 0;
+                    cache_unificada.hits    = 0;
+                    cache_unificada.misses  = 0;
+ 
+                    for (size_t i = 0; i < v.tamanho; i++)
+                    {
+                        acessa_hierarquia_memoria(&cache_dados,
+                                                  &cache_unificada,
+                                                  (unsigned int)v.dados[i]);
+                    }
+ 
+                    libera_vetor(&v);
+ 
+                    /* =============================================
+                       RESUMO DE MÉTRICAS
+                       ============================================= */
+                    unsigned long total_l1 = cache_dados.hits    + cache_dados.misses;
+                    unsigned long total_l2 = cache_unificada.hits + cache_unificada.misses;
+ 
+                    /* misses totais = chegaram à memória principal */
+                    unsigned long misses_totais = cache_unificada.misses;
+ 
+                    /* custo simulado em ciclos:
+                       hit L1 = 1 ciclo
+                       hit L2 = 10 ciclos
+                       miss total (RAM) = 100 ciclos               */
+                    unsigned long ciclos_estimados =
+                        cache_dados.hits        * 1UL  +
+                        cache_unificada.hits    * 10UL +
+                        misses_totais           * 100UL;
+ 
+                    printf("\n╔══════════════════════════════════════════╗\n");
+                    printf(  "║         RESUMO — TRACE: %-15s║\n", nome_arq);
+                    printf(  "╠══════════════════════════════════════════╣\n");
+ 
+                    printf(  "║  L1 (Cache de Dados)                     ║\n");
+                    printf(  "║    Acessos : %-28lu║\n", total_l1);
+                    printf(  "║    Hits    : %-28lu║\n", cache_dados.hits);
+                    printf(  "║    Misses  : %-28lu║\n", cache_dados.misses);
+                    if (total_l1 > 0)
+                        printf("║    Hit Rate: %-27.2f%%║\n",
+                               100.0 * cache_dados.hits / total_l1);
+ 
+                    printf(  "╠══════════════════════════════════════════╣\n");
+ 
+                    printf(  "║  L2 (Cache Unificada)                    ║\n");
+                    printf(  "║    Acessos : %-28lu║\n", total_l2);
+                    printf(  "║    Hits    : %-28lu║\n", cache_unificada.hits);
+                    printf(  "║    Misses  : %-28lu║\n", cache_unificada.misses);
+                    if (total_l2 > 0)
+                        printf("║    Hit Rate: %-27.2f%%║\n",
+                               100.0 * cache_unificada.hits / total_l2);
+ 
+                    printf(  "╠══════════════════════════════════════════╣\n");
+ 
+                    printf(  "║  Visão Geral                             ║\n");
+                    printf(  "║    Total acessos (L1)  : %-16lu║\n", total_l1);
+                    printf(  "║    Misses até RAM      : %-16lu║\n", misses_totais);
+                    printf(  "║    Ciclos estimados    : %-16lu║\n", ciclos_estimados);
+ 
+                    printf(  "╚══════════════════════════════════════════╝\n");
+                }
 			break;
 		}
 
