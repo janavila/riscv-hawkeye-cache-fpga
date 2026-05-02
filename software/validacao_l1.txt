@@ -1,97 +1,31 @@
-## TRACE DE VALIDAÇÃO — CACHE L1 (Cache de Dados)
-## L1: 4KB, blocos 32B, 2-way, 64 sets
-## Fórmulas: bloco = end/32 | set = bloco%64 | tag = bloco/64
-##
-## Legenda de colunas:
-## ENDEREÇO | BLOCO | SET | TAG | RESULTADO ESPERADO
-##
-## ============================================================
-## SET 0 — endereços 0, 4096, 8192 (tags 0, 2, 4)
-## 2-way: linhas 0 e 1. LRU bit indica qual foi usada por último.
-## ============================================================
-##
-## Acesso 1: end=0   → set0, tag0 → MISS (fria) → insere linha0, lru_bit=0
-## Acesso 2: end=4096 → set0, tag2 → MISS (fria) → insere linha1, lru_bit=1
-## Acesso 3: end=0   → set0, tag0 → HIT linha0  → lru_bit=0
-## Acesso 4: end=8192 → set0, tag4 → MISS → evicta linha1 (LRU=1-0=1) → lru_bit=1
-## Acesso 5: end=4096 → set0, tag2 → MISS → evicta linha0 (LRU=1-1=0) → lru_bit=0
-## Acesso 6: end=0   → set0, tag0 → MISS → evicta linha1 (LRU=1-0=1) → lru_bit=1
-## Acesso 7: end=0   → set0, tag0 → HIT linha1  → lru_bit=1
-##
-## SET0: esperado 2 hits, 5 misses
-##
-0
-4096
-0
-8192
-4096
-0
-0
-##
-## ============================================================
-## SET 1 — endereços 32, 4128, 8224 (bloco 1,129,257 → set1, tags 0,2,4)
-## ============================================================
-##
-## Acesso 8:  end=32   → set1, tag0 → MISS (fria) → linha0, lru_bit=0
-## Acesso 9:  end=4128 → set1, tag2 → MISS (fria) → linha1, lru_bit=1
-## Acesso 10: end=32   → set1, tag0 → HIT  linha0 → lru_bit=0
-## Acesso 11: end=32   → set1, tag0 → HIT  linha0 → lru_bit=0
-## Acesso 12: end=8224 → set1, tag4 → MISS → evicta linha1 (lru=1) → lru_bit=1
-## Acesso 13: end=4128 → set1, tag2 → MISS → evicta linha0 (lru=0) → lru_bit=0
-##
-## SET1: esperado 2 hits, 4 misses
-##
-32
-4128
-32
-32
-8224
-4128
-##
-## ============================================================
-## SET 2 — endereços 64, 4160, 8256 (bloco 2,130,258 → set2, tags 0,2,4)
-## ============================================================
-##
-## Acesso 14: end=64   → set2, tag0 → MISS (fria) → linha0, lru_bit=0
-## Acesso 15: end=4160 → set2, tag2 → MISS (fria) → linha1, lru_bit=1
-## Acesso 16: end=4160 → set2, tag2 → HIT  linha1 → lru_bit=1
-## Acesso 17: end=8256 → set2, tag4 → MISS → evicta linha0 (lru=0) → lru_bit=0
-## Acesso 18: end=64   → set2, tag0 → MISS → evicta linha1 (lru=1) → lru_bit=1
-## Acesso 19: end=64   → set2, tag0 → HIT  linha1 → lru_bit=1
-##
-## SET2: esperado 2 hits, 4 misses
-##
-64
-4160
-4160
-8256
-64
-64
-##
-## ============================================================
-## SET 3 — endereços 96, 4192 (bloco 3,131 → set3, tags 0,2)
-## Teste simples: enche as 2 linhas e faz hits repetidos sem eviction
-## ============================================================
-##
-## Acesso 20: end=96   → set3, tag0 → MISS (fria) → linha0, lru_bit=0
-## Acesso 21: end=4192 → set3, tag2 → MISS (fria) → linha1, lru_bit=1
-## Acesso 22: end=96   → set3, tag0 → HIT  linha0 → lru_bit=0
-## Acesso 23: end=4192 → set3, tag2 → HIT  linha1 → lru_bit=1
-## Acesso 24: end=96   → set3, tag0 → HIT  linha0 → lru_bit=0
-## Acesso 25: end=4192 → set3, tag2 → HIT  linha1 → lru_bit=1
-##
-## SET3: esperado 4 hits, 2 misses
-##
-96
-4192
-96
-4192
-96
-4192
-##
-## ============================================================
-## TOTAL ESPERADO NA L1
-## Hits  : 2 + 2 + 2 + 4 = 10
-## Misses: 5 + 4 + 4 + 2 = 15
-## Hit Rate: 10/25 = 40%
-## ============================================================
+# TRACE DE VALIDACAO L1 COM PSEUDO-PC
+# formato: endereco pseudo_pc
+
+0 101
+4096 102
+0 101
+8192 103
+4096 102
+0 101
+0 101
+
+32 201
+4128 202
+32 201
+32 201
+8224 203
+4128 202
+
+64 301
+4160 302
+4160 302
+8256 303
+64 301
+64 301
+
+96 401
+4192 402
+96 401
+4192 402
+96 401
+4192 402

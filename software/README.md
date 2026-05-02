@@ -3,7 +3,7 @@ Implementation of the Hawkeye replacement algorithm for L1/L2 caches in a RISC-V
 
 Compilação & execução
 -> Windows 
-    -> gcc -Wall -Wextra main.c cache.c file_io.c lru.c -o simulador_cache.exe
+    -> gcc -Wall -Wextra main.c cache.c file_io.c lru.c hawkeye.c sampler.c optgen.c -o simulador_cache.exe
     -> .\simulador_cache.exe
 
 -> Linux

@@ -5,21 +5,18 @@
 
 typedef struct
 {
-    int *dados;     
-    size_t tamanho; /* elementos lidos */
-} VetorInteiros;
+   unsigned int endereco;
+   unsigned long pseudo_pc;
+} AcessoTrace;
 
-/*
-   Salva um vetor de inteiros em um arquivo texto,
-   um valor por linha.
-*/
-int salva_vetor_em_arquivo(const char *nome_arquivo, const int *vetor, size_t tamanho);
+typedef struct
+{
+   AcessoTrace *dados;
+   size_t tamanho;
+} VetorAcessos;
 
-VetorInteiros le_vetor_de_arquivo(const char *nome_arquivo);
+int salva_vetor_em_arquivo(const char *nome_arquivo, const AcessoTrace *vetor, size_t tamanho);
+VetorAcessos le_vetor_de_arquivo(const char *nome_arquivo);
+void libera_vetor(VetorAcessos *v);
 
-/*
-   Libera a memoria alocada dentro de um VetorInteiros.
-*/
-void libera_vetor(VetorInteiros *v);
-
-#endif /* FILE_IO_H */
+#endif

@@ -1,15 +1,14 @@
 #include "file_io.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h> 
+#include <ctype.h>
 
 /* =========================================================
    SALVA VETOR EM ARQUIVO
    ========================================================= */
 
-int salva_vetor_em_arquivo(const char *nome_arquivo, const int *vetor, size_t tamanho)
+int salva_vetor_em_arquivo(const char *nome_arquivo, const AcessoTrace *vetor, size_t tamanho)
 {
-    /* Validacao  parametros */
     if (nome_arquivo == NULL || vetor == NULL)
     {
         printf("Erro: parametros invalidos em salva_vetor_em_arquivo.\n");
@@ -26,22 +25,22 @@ int salva_vetor_em_arquivo(const char *nome_arquivo, const int *vetor, size_t ta
 
     for (size_t i = 0; i < tamanho; i++)
     {
-        fprintf(arquivo, "%d\n", vetor[i]);
+        fprintf(arquivo, "%u %lu\n", vetor[i].endereco, vetor[i].pseudo_pc);
     }
 
     fclose(arquivo);
 
-    printf("Vetor salvo com sucesso em '%s' (%zu elementos).\n", nome_arquivo, tamanho);
+    printf("Vetor salvo com sucesso em '%s' (%lu elementos).\n",
+           nome_arquivo, (unsigned long)tamanho);
     return 0;
 }
-
 /* =========================================================
    LE VETOR DE ARQUIVO
    ========================================================= */
 
-VetorInteiros le_vetor_de_arquivo(const char *nome_arquivo)
+VetorAcessos le_vetor_de_arquivo(const char *nome_arquivo)
 {
-    VetorInteiros resultado;
+    VetorAcessos resultado;
     resultado.dados = NULL;
     resultado.tamanho = 0;
 
@@ -61,68 +60,76 @@ VetorInteiros le_vetor_de_arquivo(const char *nome_arquivo)
 
     char linha[256];
     size_t contador = 0;
- 
-    /* --- 1a passagem: conta linhas válidas (não comentário, não vazia) --- */
+
+    /* --- 1a passagem: conta linhas válidas --- */
     while (fgets(linha, sizeof(linha), arquivo) != NULL)
     {
-        /* encontra o primeiro caractere não-espaço da linha */
         char *p = linha;
-        while (*p && isspace((unsigned char)*p)) p++;
- 
-        /* pula linha vazia ou comentário */
-        if (*p == '\0' || *p == '#') continue;
- 
-        /* verifica se a linha contém um inteiro válido */
-        int valor;
-        if (sscanf(p, "%d", &valor) == 1)
+        while (*p && isspace((unsigned char)*p))
+            p++;
+
+        if (*p == '\0' || *p == '#')
+            continue;
+
+        unsigned int endereco;
+        unsigned long pseudo_pc;
+
+        if (sscanf(p, "%u %lu", &endereco, &pseudo_pc) == 2)
             contador++;
     }
- 
+
     if (contador == 0)
     {
-        printf("Aviso: arquivo '%s' nao contem enderecos validos.\n", nome_arquivo);
+        printf("Aviso: arquivo '%s' nao contem acessos validos.\n", nome_arquivo);
         fclose(arquivo);
         return resultado;
     }
- 
-    /* --- Aloca vetor com tamanho exato --- */
-    resultado.dados = (int *)malloc(contador * sizeof(int));
+
+    resultado.dados = (AcessoTrace *)malloc(contador * sizeof(AcessoTrace));
     if (resultado.dados == NULL)
     {
-        printf("Erro: falha ao alocar memoria para %zu elementos.\n", contador);
+        printf("Erro: falha ao alocar memoria para %lu elementos.\n", (unsigned long)contador);
         fclose(arquivo);
         return resultado;
     }
- 
-    /* --- 2a passagem: relê e armazena os valores --- */
+
     rewind(arquivo);
     size_t idx = 0;
- 
+
+    /* --- 2a passagem: lê endereco + pseudo_pc --- */
     while (fgets(linha, sizeof(linha), arquivo) != NULL && idx < contador)
     {
         char *p = linha;
-        while (*p && isspace((unsigned char)*p)) p++;
- 
-        if (*p == '\0' || *p == '#') continue;
- 
-        int valor;
-        if (sscanf(p, "%d", &valor) == 1)
-            resultado.dados[idx++] = valor;
+        while (*p && isspace((unsigned char)*p))
+            p++;
+
+        if (*p == '\0' || *p == '#')
+            continue;
+
+        unsigned int endereco;
+        unsigned long pseudo_pc;
+
+        if (sscanf(p, "%u %lu", &endereco, &pseudo_pc) == 2)
+        {
+            resultado.dados[idx].endereco = endereco;
+            resultado.dados[idx].pseudo_pc = pseudo_pc;
+            idx++;
+        }
     }
- 
+
     resultado.tamanho = idx;
     fclose(arquivo);
- 
-    printf("Arquivo '%s' lido com sucesso (%zu enderecos, comentarios ignorados).\n",
-           nome_arquivo, resultado.tamanho);
-    return resultado;  
-}
 
+    printf("Arquivo '%s' lido com sucesso (%lu acessos, comentarios ignorados).\n",
+           nome_arquivo, (unsigned long)idx);
+
+    return resultado;
+}
 /* =========================================================
    LIBERA VETOR
    ========================================================= */
 
-void libera_vetor(VetorInteiros *v)
+void libera_vetor(VetorAcessos *v)
 {
     if (v == NULL)
         return;
