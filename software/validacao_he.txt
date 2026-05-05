@@ -1,0 +1,142 @@
+## TRACE DE VALIDAÇÃO — HAWKEYE vs LRU
+## L2: 32KB, blocos 64B, 8-way, 64 sets
+## Todos os endereços caem no SET 0 da L2
+##
+## PC=50: streaming (averse) — varre blocos que não voltam
+## PC=99: hot data  (friendly) — acessa o mesmo bloco repetidamente
+##
+## O hot_data é o endereço 4096 (set 0, tag 1)
+##
+## FASE 1: Preenche as 8 vias do set 0 (8 misses frios)
+## Acessa hot (4096) entre cada inserção para dar sinal ao OPTgen
+##
+0 50
+4096 99
+4096 99
+4096 99
+8192 50
+4096 99
+4096 99
+4096 99
+12288 50
+4096 99
+4096 99
+4096 99
+16384 50
+4096 99
+4096 99
+4096 99
+20480 50
+4096 99
+4096 99
+4096 99
+24576 50
+4096 99
+4096 99
+4096 99
+28672 50
+4096 99
+4096 99
+4096 99
+##
+## Agora o set 0 tem: tags 0,1,2,3,4,5,6,7 (8 vias cheias)
+## Tag 1 (addr 4096, PC=99) tem reuso altíssimo
+## Tags 0,2,3,4,5,6,7 (PC=50) foram acessadas uma vez cada
+##
+## FASE 2: Insere blocos novos forçando evictions
+## Intercala com acessos ao hot para manter reuso
+##
+## Com LRU: a vítima é sempre o bloco mais antigo sem hit recente.
+##          Como acessamos hot (4096) recentemente, ele sobrevive.
+##          Mas eventualmente, após vários blocos novos, o LRU
+##          vai começar a expulsar blocos úteis de forma subótima.
+##
+## Com Hawkeye: PC=50 é classificado como averse (RRPV=7)
+##              PC=99 é classificado como friendly (RRPV=0)
+##              O hot_data NUNCA é expulso.
+##
+32768 50
+4096 99
+4096 99
+4096 99
+36864 50
+4096 99
+4096 99
+4096 99
+##
+## FASE 3: Repete o ciclo mais vezes para acumular diferenças
+## Agora reutiliza endereços antigos que foram expulsos
+## para gerar misses de conflito diferenciadores
+##
+0 50
+4096 99
+4096 99
+8192 50
+4096 99
+4096 99
+12288 50
+4096 99
+4096 99
+16384 50
+4096 99
+4096 99
+20480 50
+4096 99
+4096 99
+24576 50
+4096 99
+4096 99
+28672 50
+4096 99
+4096 99
+32768 50
+4096 99
+4096 99
+36864 50
+4096 99
+4096 99
+0 50
+4096 99
+4096 99
+8192 50
+4096 99
+4096 99
+12288 50
+4096 99
+4096 99
+16384 50
+4096 99
+4096 99
+20480 50
+4096 99
+4096 99
+24576 50
+4096 99
+4096 99
+28672 50
+4096 99
+4096 99
+32768 50
+4096 99
+4096 99
+36864 50
+4096 99
+4096 99
+0 50
+4096 99
+8192 50
+4096 99
+12288 50
+4096 99
+16384 50
+4096 99
+20480 50
+4096 99
+24576 50
+4096 99
+28672 50
+4096 99
+32768 50
+4096 99
+36864 50
+4096 99

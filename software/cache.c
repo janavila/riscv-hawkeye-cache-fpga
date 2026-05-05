@@ -626,7 +626,7 @@ void hawkeye_init_cache_state(CacheUnificada *cache)
 
 	for (int i = 0; i < NUM_SETS_UNIFICADA; i++)
 	{
-		optgen_init(&cache->optgen_sets[i], ASSOCIATIVITY_UNIFICADA - 2);
+		optgen_init(&cache->optgen_sets[i], ASSOCIATIVITY_UNIFICADA);
 		cache->set_timer[i] = 0;
 	}
 }
@@ -653,15 +653,18 @@ void hawkeye_update_on_access(CacheUnificada *cache, RequisicaoMemoria *req,
 
 	if (pos != -1)
 	{
-		uint32_t prev_mod = cache->sampler_sets[sample_set].entries[pos].previous_time % OPTGEN_SIZE;
-		int should_cache = optgen_is_cache(&cache->optgen_sets[req->set], currentVal, prev_mod);
+		if (!hit)
+		{
+			uint32_t prev_mod = cache->sampler_sets[sample_set].entries[pos].previous_time % OPTGEN_SIZE;
+			int should_cache = optgen_is_cache(&cache->optgen_sets[req->set], currentVal, prev_mod);
 
-		if (should_cache)
-			hawkeye_increase(&cache->hawkeye_preditor,
-							 cache->sampler_sets[sample_set].entries[pos].pc);
-		else
-			hawkeye_decrease(&cache->hawkeye_preditor,
-							 cache->sampler_sets[sample_set].entries[pos].pc);
+			if (should_cache)
+				hawkeye_increase(&cache->hawkeye_preditor,
+								 cache->sampler_sets[sample_set].entries[pos].pc);
+			else
+				hawkeye_decrease(&cache->hawkeye_preditor,
+								 cache->sampler_sets[sample_set].entries[pos].pc);
+		}
 
 		optgen_set_access(&cache->optgen_sets[req->set], currentVal);
 		sampler_age_entries(&cache->sampler_sets[sample_set],
@@ -688,7 +691,6 @@ void hawkeye_update_on_access(CacheUnificada *cache, RequisicaoMemoria *req,
 	}
 
 	cache->set_timer[req->set] = (cache->set_timer[req->set] + 1) % 1024;
-	(void)hit;
 }
 
 int linha_cache_friendly(CacheUnificada *cache, uint64_t pc)
@@ -699,7 +701,7 @@ int linha_cache_friendly(CacheUnificada *cache, uint64_t pc)
 int escolhe_vitima_hawkeye_real(CacheUnificada *cache, RequisicaoMemoria *req)
 {
 	int linha_escolhida = -1;
-	int maior_lru = -1;
+	unsigned int maior_rrpv = 0;
 
 	for (int i = 0; i < ASSOCIATIVITY_UNIFICADA; i++)
 	{
@@ -709,9 +711,10 @@ int escolhe_vitima_hawkeye_real(CacheUnificada *cache, RequisicaoMemoria *req)
 
 			if (!linha_cache_friendly(cache, pc_linha))
 			{
-				if (cache->sets[req->set].linhas[i].lru_estado > maior_lru)
+				if (linha_escolhida == -1 ||
+					cache->sets[req->set].linhas[i].rrpv > maior_rrpv)
 				{
-					maior_lru = cache->sets[req->set].linhas[i].lru_estado;
+					maior_rrpv = cache->sets[req->set].linhas[i].rrpv;
 					linha_escolhida = i;
 				}
 			}
@@ -755,7 +758,7 @@ void hawkeye_init_cache_state_l1(CacheDados *cache)
 	for (int i = 0; i < NUM_SETS_DADOS; i++)
 	{
 		/* cache_size = ASSOCIATIVITY - 1: deixa espaco para nova insercao */
-		optgen_init(&cache->optgen_sets[i], ASSOCIATIVITY_DADOS - 1);
+		optgen_init(&cache->optgen_sets[i], ASSOCIATIVITY_DADOS);
 		cache->set_timer[i] = 0;
 	}
 }
@@ -786,15 +789,18 @@ void hawkeye_update_on_access_l1(CacheDados *cache, RequisicaoMemoria *req,
 
 	if (pos != -1)
 	{
-		uint32_t prev_mod = cache->sampler_sets[sample_set].entries[pos].previous_time % OPTGEN_SIZE;
-		int should_cache = optgen_is_cache(&cache->optgen_sets[req->set], currentVal, prev_mod);
+		if (!hit)
+		{
+			uint32_t prev_mod = cache->sampler_sets[sample_set].entries[pos].previous_time % OPTGEN_SIZE;
+			int should_cache = optgen_is_cache(&cache->optgen_sets[req->set], currentVal, prev_mod);
 
-		if (should_cache)
-			hawkeye_increase(&cache->hawkeye_preditor,
-							 cache->sampler_sets[sample_set].entries[pos].pc);
-		else
-			hawkeye_decrease(&cache->hawkeye_preditor,
-							 cache->sampler_sets[sample_set].entries[pos].pc);
+			if (should_cache)
+				hawkeye_increase(&cache->hawkeye_preditor,
+								 cache->sampler_sets[sample_set].entries[pos].pc);
+			else
+				hawkeye_decrease(&cache->hawkeye_preditor,
+								 cache->sampler_sets[sample_set].entries[pos].pc);
+		}
 
 		optgen_set_access(&cache->optgen_sets[req->set], currentVal);
 		sampler_age_entries(&cache->sampler_sets[sample_set],
@@ -821,13 +827,12 @@ void hawkeye_update_on_access_l1(CacheDados *cache, RequisicaoMemoria *req,
 	}
 
 	cache->set_timer[req->set] = (cache->set_timer[req->set] + 1) % 1024;
-	(void)hit;
 }
 
 int escolhe_vitima_hawkeye_real_l1(CacheDados *cache, RequisicaoMemoria *req)
 {
 	int linha_escolhida = -1;
-	int maior_lru = -1;
+	unsigned int maior_rrpv = 0;
 
 	for (int i = 0; i < ASSOCIATIVITY_DADOS; i++)
 	{
@@ -837,9 +842,10 @@ int escolhe_vitima_hawkeye_real_l1(CacheDados *cache, RequisicaoMemoria *req)
 
 			if (!linha_cache_friendly_l1(cache, pc_linha))
 			{
-				if (cache->sets[req->set].linhas[i].lru_estado > maior_lru)
+				if (linha_escolhida == -1 ||
+					cache->sets[req->set].linhas[i].rrpv > maior_rrpv)
 				{
-					maior_lru = cache->sets[req->set].linhas[i].lru_estado;
+					maior_rrpv = cache->sets[req->set].linhas[i].rrpv;
 					linha_escolhida = i;
 				}
 			}
@@ -908,8 +914,10 @@ void atualiza_rrip_l2(CacheUnificada *cache, RequisicaoMemoria *req, int linha, 
 
 	if (hit)
 	{
-		/* Hit: acesso recente, prioridade maxima */
-		cache->sets[req->set].linhas[linha].rrpv = 0;
+		if (amigavel)
+			cache->sets[req->set].linhas[linha].rrpv = 0;
+		else if (cache->sets[req->set].linhas[linha].rrpv > 0)
+			cache->sets[req->set].linhas[linha].rrpv--;
 		return;
 	}
 
@@ -962,7 +970,10 @@ void atualiza_rrip_l1(CacheDados *cache, RequisicaoMemoria *req, int linha, int 
 
 	if (hit)
 	{
-		cache->sets[req->set].linhas[linha].rrpv = 0;
+		if (amigavel)
+			cache->sets[req->set].linhas[linha].rrpv = 0;
+		else if (cache->sets[req->set].linhas[linha].rrpv > 0)
+			cache->sets[req->set].linhas[linha].rrpv--;
 		return;
 	}
 

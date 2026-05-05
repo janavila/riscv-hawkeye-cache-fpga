@@ -64,9 +64,9 @@ void run_streaming(int *array, volatile int *hot_data, FILE *trace)
 
             /* MUDANCA 2: hot_data acessado a cada 8 (era 64)
                PC=102: acesso recorrente ao dado quente — cache-friendly */
-            if (i % 8 == 0)
+            if (i % 1024 == 0)
             {
-                fprintf(trace, "%u %lu\n", NORM((void *)hot_data, base), 102UL);
+                fprintf(trace, "%u %lu\n", (unsigned int)(ARRAY_SIZE * sizeof(int)), 102UL);
                 *hot_data += array[i];
             }
         }
@@ -237,8 +237,8 @@ int main()
 
     int *big_array = (int *)calloc(ARRAY_SIZE, sizeof(int));
     int *out_array = (int *)calloc(ARRAY_SIZE, sizeof(int));
-    uint8_t *blob = (uint8_t *)malloc(L2_SIZE_BYTES);
-    Node *nodes = (Node *)malloc(2000 * sizeof(Node));
+    uint8_t *blob = (uint8_t *)malloc(L2_SIZE_BYTES * 2);
+    Node *nodes = (Node *)malloc(8000 * sizeof(Node));
 
     if (!big_array || !out_array || !blob || !nodes)
     {
@@ -251,12 +251,12 @@ int main()
     }
 
     /* linked list circular */
-    for (int i = 0; i < 1999; i++)
+    for (int i = 0; i < 7999; i++)
         nodes[i].next = &nodes[i + 1];
-    nodes[1999].next = &nodes[0];
+    nodes[7999].next = &nodes[0];
 
     /* blob com valores variados */
-    for (int i = 0; i < L2_SIZE_BYTES; i++)
+    for (int i = 0; i < L2_SIZE_BYTES * 2; i++)
         blob[i] = (uint8_t)(i % 251);
 
     while (choice != 0)
@@ -300,7 +300,7 @@ int main()
                 printf("Erro ao abrir arquivo!\n");
                 break;
             }
-            run_linked_list(nodes, 2000, trace);
+            run_linked_list(nodes, 8000, trace);
             fclose(trace);
             printf("Trace salvo em: trace_linkedlist.txt\n");
             break;
@@ -312,7 +312,7 @@ int main()
                 printf("Erro ao abrir arquivo!\n");
                 break;
             }
-            run_pattern_search(blob, L2_SIZE_BYTES, trace);
+            run_pattern_search(blob, L2_SIZE_BYTES * 2, trace);
             fclose(trace);
             printf("Trace salvo em: trace_pattern.txt\n");
             break;
@@ -335,14 +335,14 @@ int main()
             trace = fopen("trace_linkedlist.txt", "w");
             if (trace)
             {
-                run_linked_list(nodes, 2000, trace);
+                run_linked_list(nodes, 8000, trace);
                 fclose(trace);
             }
 
             trace = fopen("trace_pattern.txt", "w");
             if (trace)
             {
-                run_pattern_search(blob, L2_SIZE_BYTES, trace);
+                run_pattern_search(blob, L2_SIZE_BYTES * 2, trace);
                 fclose(trace);
             }
 

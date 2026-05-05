@@ -5,8 +5,8 @@
 #include <stdbool.h>
 
 #define SAMPLER_HIST 8
-#define SAMPLER_ENTRIES 2800
-#define SAMPLER_SETS (SAMPLER_ENTRIES / SAMPLER_HIST)
+#define SAMPLER_SETS 64
+#define SAMPLER_ENTRIES (SAMPLER_SETS * SAMPLER_HIST)
 
 typedef struct
 {
