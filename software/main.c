@@ -467,24 +467,65 @@ int main()
 			printf("Trace 4 (ex: trace_pattern.txt): ");
 			scanf("%s", nomes_traces[3]);
 
+			/* salva politicas originais para restaurar ao final */
+			PoliticaL1 pol_l1_orig = cache_dados.politica_ativa;
+			PoliticaL2 pol_l2_orig = cache_unificada.politica_ativa;
+
+			/* cria arquivo de log com timestamp */
+			time_t agora = time(NULL);
+			struct tm *t_tm = localtime(&agora);
+			char nome_log[128];
+			snprintf(nome_log, sizeof(nome_log),
+			         "resultados_benchmark_%04d%02d%02d_%02d%02d%02d.txt",
+			         t_tm->tm_year + 1900, t_tm->tm_mon + 1, t_tm->tm_mday,
+			         t_tm->tm_hour, t_tm->tm_min, t_tm->tm_sec);
+			FILE *log_fp = fopen(nome_log, "w");
+			if (!log_fp) {
+				printf("ERRO: nao foi possivel criar arquivo de log %s\n", nome_log);
+				break;
+			}
+			fprintf(log_fp, "=== BENCHMARK COMPLETO — %s", asctime(t_tm));
+			fprintf(log_fp, "Configuracoes testadas: LRU+LRU, HE+HE, LRU+HE\n");
+			fprintf(log_fp, "Traces: streaming, conv, linkedlist, pattern\n\n");
+			fflush(log_fp);
+
 			typedef struct {
 				double hr_l1;
 				double hr_l2;
 				unsigned long ciclos;
+				unsigned long l1_acessos;
+				unsigned long l1_hits;
+				unsigned long l1_misses;
+				unsigned long l2_acessos;
+				unsigned long l2_hits;
+				unsigned long l2_misses;
+				unsigned long hits_totais;
+				unsigned long misses_totais;
+				double tempo_ms_val;
 			} ResultadoBench;
 
-			ResultadoBench res_lru[NUM_TRACES_BENCH];
-			ResultadoBench res_hawk[NUM_TRACES_BENCH];
-			double tempo_ms[2][NUM_TRACES_BENCH];
-			unsigned long hits_total[2][NUM_TRACES_BENCH];
-			unsigned long misses_total[2][NUM_TRACES_BENCH];
+			#define NUM_CONFIGS 3
+			PoliticaL1 pols_l1[NUM_CONFIGS] = {
+				POLITICA_L1_LRU,
+				POLITICA_L1_HAWKEYE,
+				POLITICA_L1_LRU
+			};
+			PoliticaL2 pols_l2[NUM_CONFIGS] = {
+				POLITICA_L2_LRU,
+				POLITICA_L2_HAWKEYE,
+				POLITICA_L2_HAWKEYE
+			};
+			const char *nome_config[NUM_CONFIGS] = {
+				"LRU+LRU",
+				"HE+HE",
+				"LRU+HE"
+			};
+			ResultadoBench res[NUM_CONFIGS][NUM_TRACES_BENCH];
 
-			PoliticaL1 pols_l1[2] = { POLITICA_L1_LRU, POLITICA_L1_HAWKEYE };
-			PoliticaL2 pols_l2[2] = { POLITICA_L2_LRU, POLITICA_L2_HAWKEYE };
-
-			for (int p = 0; p < 2; p++)
+			/* loop externo: trace; interno: politica — grava apos cada par */
+			for (int tb = 0; tb < NUM_TRACES_BENCH; tb++)
 			{
-				for (int t = 0; t < NUM_TRACES_BENCH; t++)
+				for (int p = 0; p < NUM_CONFIGS; p++)
 				{
 					inicializa_cache_dados(&cache_dados);
 					inicializa_cache_unificada(&cache_unificada);
@@ -495,91 +536,105 @@ int main()
 					cache_unificada.hits = 0;
 					cache_unificada.misses = 0;
 
-					VetorAcessos v = le_vetor_de_arquivo(nomes_traces[t]);
+					VetorAcessos v = le_vetor_de_arquivo(nomes_traces[tb]);
 
 					tempo_t t_ini;
 					tempo_inicio(&t_ini);
 
-					if (v.dados != NULL)
-					{
-						for (size_t i = 0; i < v.tamanho; i++)
-						{
+					if (v.dados != NULL) {
+						for (size_t i = 0; i < v.tamanho; i++) {
 							acessa_hierarquia_memoria(&cache_dados,
-													  &cache_unificada,
-													  v.dados[i].endereco,
-													  v.dados[i].pseudo_pc);
+							                          &cache_unificada,
+							                          v.dados[i].endereco,
+							                          v.dados[i].pseudo_pc);
 						}
 						libera_vetor(&v);
 					}
 
-					tempo_ms[p][t] = tempo_decorrido_ms(&t_ini);
+					double ms = tempo_decorrido_ms(&t_ini);
 
-					unsigned long total_l1 = cache_dados.hits + cache_dados.misses;
-					unsigned long total_l2 = cache_unificada.hits + cache_unificada.misses;
-					unsigned long misses_ram = cache_unificada.misses;
-					unsigned long ciclos = cache_dados.hits * 1UL +
-										  cache_unificada.hits * 10UL +
-										  misses_ram * 100UL;
-
-					hits_total[p][t] = cache_dados.hits + cache_unificada.hits;
-					misses_total[p][t] = cache_dados.misses + cache_unificada.misses;
+					unsigned long tot_l1   = cache_dados.hits + cache_dados.misses;
+					unsigned long tot_l2   = cache_unificada.hits + cache_unificada.misses;
+					unsigned long miss_ram = cache_unificada.misses;
+					unsigned long ciclos   = cache_dados.hits * 1UL +
+					                         cache_unificada.hits * 10UL +
+					                         miss_ram * 100UL;
 
 					ResultadoBench r;
-					r.hr_l1 = total_l1 > 0 ? 100.0 * cache_dados.hits / total_l1 : 0.0;
-					r.hr_l2 = total_l2 > 0 ? 100.0 * cache_unificada.hits / total_l2 : 0.0;
-					r.ciclos = ciclos;
+					r.hr_l1         = tot_l1 > 0 ? 100.0 * cache_dados.hits / tot_l1 : 0.0;
+					r.hr_l2         = tot_l2 > 0 ? 100.0 * cache_unificada.hits / tot_l2 : 0.0;
+					r.ciclos        = ciclos;
+					r.l1_acessos    = tot_l1;
+					r.l1_hits       = cache_dados.hits;
+					r.l1_misses     = cache_dados.misses;
+					r.l2_acessos    = tot_l2;
+					r.l2_hits       = cache_unificada.hits;
+					r.l2_misses     = cache_unificada.misses;
+					r.hits_totais   = cache_dados.hits + cache_unificada.hits;
+					r.misses_totais = cache_dados.misses + cache_unificada.misses;
+					r.tempo_ms_val  = ms;
 
-					if (p == 0)
-						res_lru[t] = r;
-					else
-						res_hawk[t] = r;
+					res[p][tb] = r;
+
+					printf("  [%s] HR-L1=%.2f%% HR-L2=%.2f%% ciclos=%lu (%.1fs)\n",
+					       nome_config[p], r.hr_l1, r.hr_l2, r.ciclos, ms / 1000.0);
 				}
+
+				/* grava resultado deste trace imediatamente */
+				fprintf(log_fp, "----- TRACE: %s -----\n", nomes_traces[tb]);
+				for (int p = 0; p < NUM_CONFIGS; p++) {
+					ResultadoBench *rp = &res[p][tb];
+					fprintf(log_fp, "%s:\n", nome_config[p]);
+					fprintf(log_fp, "  L1 acessos=%lu hits=%lu misses=%lu HR=%.2f%%\n",
+					        rp->l1_acessos, rp->l1_hits, rp->l1_misses, rp->hr_l1);
+					fprintf(log_fp, "  L2 acessos=%lu hits=%lu misses=%lu HR=%.2f%%\n",
+					        rp->l2_acessos, rp->l2_hits, rp->l2_misses, rp->hr_l2);
+					fprintf(log_fp, "  Total hits=%lu misses=%lu tempo_ms=%.2f ciclos=%lu\n",
+					        rp->hits_totais, rp->misses_totais, rp->tempo_ms_val, rp->ciclos);
+				}
+				double delta_hehe   = res[1][tb].hr_l2 - res[0][tb].hr_l2;
+				double delta_hibrid = res[2][tb].hr_l2 - res[0][tb].hr_l2;
+				fprintf(log_fp, "Delta HR-L2 (HE+HE  vs LRU+LRU): %+.2f%%\n", delta_hehe);
+				fprintf(log_fp, "Delta HR-L2 (LRU+HE vs LRU+LRU): %+.2f%%\n\n", delta_hibrid);
+				fflush(log_fp);
+#ifndef _WIN32
+				fsync(fileno(log_fp));
+#endif
 			}
 
-			/* restaura politica que estava antes do benchmark */
-			set_politica_l1(&cache_dados, cache_dados.politica_ativa);
-			set_politica_l2(&cache_unificada, cache_unificada.politica_ativa);
+			printf("\n=== TABELA RESUMO ===\n");
+			printf("%-25s %-10s %-10s %-10s %-10s %-12s\n",
+			       "Trace", "Config", "HR-L1", "HR-L2", "Ciclos", "Tempo(ms)");
+			fprintf(log_fp, "\n=== TABELA RESUMO ===\n");
+			fprintf(log_fp, "%-25s %-10s %-10s %-10s %-10s %-12s\n",
+			        "Trace", "Config", "HR-L1", "HR-L2", "Ciclos", "Tempo(ms)");
 
-			printf("\n╔═══════════════════════════════════════════════════════════════════════╗\n");
-			printf("║              BENCHMARK COMPLETO — LRU vs HAWKEYE                     ║\n");
-			printf("╠════════════════╦══════════════════════════════╦══════════════════════╣\n");
-			printf("║ Trace          ║ LRU                          ║ HAWKEYE              ║\n");
-			printf("║                ║ HR-L1  HR-L2  Ciclos    ms   ║ HR-L1  HR-L2  Ciclos    ms   ║\n");
-			printf("╠════════════════╬══════════════════════════════╬══════════════════════╣\n");
-
-			for (int t = 0; t < NUM_TRACES_BENCH; t++)
+			for (int tb = 0; tb < NUM_TRACES_BENCH; tb++) {
+				for (int p = 0; p < NUM_CONFIGS; p++) {
+					ResultadoBench *rp = &res[p][tb];
+					printf("%-25s %-10s %6.2f%%   %6.2f%%   %-10lu %-12.2f\n",
+					       nomes_traces[tb], nome_config[p],
+					       rp->hr_l1, rp->hr_l2, rp->ciclos, rp->tempo_ms_val);
+					fprintf(log_fp, "%-25s %-10s %6.2f%%   %6.2f%%   %-10lu %-12.2f\n",
+					        nomes_traces[tb], nome_config[p],
+					        rp->hr_l1, rp->hr_l2, rp->ciclos, rp->tempo_ms_val);
+				}
+				printf("%-25s %-10s\n", "", "---");
+				fprintf(log_fp, "%-25s %-10s\n", "", "---");
+			}
 			{
-				printf("║ %-14s ║ %5.1f%% %5.1f%% %-8lu %5.1fms ║ %5.1f%% %5.1f%% %-8lu %5.1fms ║\n",
-					   nomes_traces[t],
-					   res_lru[t].hr_l1, res_lru[t].hr_l2, res_lru[t].ciclos, tempo_ms[0][t],
-					   res_hawk[t].hr_l1, res_hawk[t].hr_l2, res_hawk[t].ciclos, tempo_ms[1][t]);
+				time_t agora_fim = time(NULL);
+				fprintf(log_fp, "Concluido em: %s", asctime(localtime(&agora_fim)));
 			}
+			fclose(log_fp);
+			printf("\nResultados salvos em: %s\n", nome_log);
 
-			printf("╚════════════════╩══════════════════════════════╩══════════════════════╝\n");
+			/* restaura politicas originais */
+			set_politica_l1(&cache_dados, pol_l1_orig);
+			set_politica_l2(&cache_unificada, pol_l2_orig);
 
-			for (int t = 0; t < NUM_TRACES_BENCH; t++)
-			{
-				double diff = res_hawk[t].hr_l2 - res_lru[t].hr_l2;
-				if (diff > 0.5)
-					printf("  [%s] Hawkeye ganhou %.1f%% de hit rate na L2\n", nomes_traces[t], diff);
-				else if (diff < -0.5)
-					printf("  [%s] LRU ganhou %.1f%% de hit rate na L2\n", nomes_traces[t], -diff);
-				else
-					printf("  [%s] Empate na L2 (diferenca < 0.5%%)\n", nomes_traces[t]);
-			}
-
-			printf("\n");
-			for (int t = 0; t < NUM_TRACES_BENCH; t++)
-			{
-				printf("  [%s]\n", nomes_traces[t]);
-				printf("    Hits totais  — LRU: %-10lu  HE: %lu\n",
-					   hits_total[0][t], hits_total[1][t]);
-				printf("    Misses totais— LRU: %-10lu  HE: %lu\n",
-					   misses_total[0][t], misses_total[1][t]);
-				printf("    Tempo        — LRU: %-8.2fms  HE: %.2fms\n",
-					   tempo_ms[0][t], tempo_ms[1][t]);
-			}
 			#undef NUM_TRACES_BENCH
+			#undef NUM_CONFIGS
 			break;
 		}
 

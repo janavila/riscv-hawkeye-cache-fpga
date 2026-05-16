@@ -1,0 +1,56 @@
+=== BENCHMARK COMPLETO — Sun May 10 16:16:54 2026
+Politicas: LRU vs Hawkeye
+Traces: streaming, conv, linkedlist, pattern
+
+----- TRACE: trace_streaming.txt -----
+LRU:
+  L1 acessos=665600 hits=573440 misses=92160 HR=86.15%
+  L2 acessos=92160 hits=40960 misses=51200 HR=44.44%
+  Total hits=614400 misses=143360 tempo_ms=1406925.67 ciclos=6103040
+Hawkeye:
+  L1 acessos=665600 hits=573440 misses=92160 HR=86.15%
+  L2 acessos=92160 hits=44850 misses=47310 HR=48.67%
+  Total hits=618290 misses=139470 tempo_ms=1565307.68 ciclos=5752940
+Delta HR-L2 (HE-LRU): +4.22%
+
+----- TRACE: trace_conv.txt -----
+LRU:
+  L1 acessos=368640 hits=0 misses=368640 HR=0.00%
+  L2 acessos=368640 hits=356736 misses=11904 HR=96.77%
+  Total hits=356736 misses=380544 tempo_ms=1361672.41 ciclos=4757760
+Hawkeye:
+  L1 acessos=368640 hits=0 misses=368640 HR=0.00%
+  L2 acessos=368640 hits=251628 misses=117012 HR=68.26%
+  Total hits=251628 misses=485652 tempo_ms=1409983.37 ciclos=14217480
+Delta HR-L2 (HE-LRU): -28.51%
+
+----- TRACE: trace_linkedlist.txt -----
+LRU:
+  L1 acessos=198000 hits=100781 misses=97219 HR=50.90%
+  L2 acessos=97219 hits=5727 misses=91492 HR=5.89%
+  Total hits=106508 misses=188711 tempo_ms=593705.99 ciclos=9307251
+Hawkeye:
+  L1 acessos=198000 hits=99788 misses=98212 HR=50.40%
+  L2 acessos=98212 hits=7663 misses=90549 HR=7.80%
+  Total hits=107451 misses=188761 tempo_ms=607278.44 ciclos=9231318
+Delta HR-L2 (HE-LRU): +1.91%
+
+----- TRACE: trace_patter.txt -----
+LRU:
+  L1 acessos=0 hits=0 misses=0 HR=0.00%
+  L2 acessos=0 hits=0 misses=0 HR=0.00%
+  Total hits=0 misses=0 tempo_ms=0.00 ciclos=0
+Hawkeye:
+  L1 acessos=0 hits=0 misses=0 HR=0.00%
+  L2 acessos=0 hits=0 misses=0 HR=0.00%
+  Total hits=0 misses=0 tempo_ms=0.00 ciclos=0
+Delta HR-L2 (HE-LRU): +0.00%
+
+
+=== TABELA RESUMO ===
+Trace                 LRU(HR-L1 HR-L2 Ciclos)        HE(HR-L1 HR-L2 Ciclos)         Delta
+trace_streaming.txt    86.2%  44.4% 6103040         86.2%  48.7% 5752940        +4.22%
+trace_conv.txt          0.0%  96.8% 4757760          0.0%  68.3% 14217480       -28.51%
+trace_linkedlist.txt   50.9%   5.9% 9307251         50.4%   7.8% 9231318        +1.91%
+trace_patter.txt        0.0%   0.0% 0                0.0%   0.0% 0              +0.00%
+Concluido em: Sun May 10 18:12:40 2026

@@ -1,0 +1,88 @@
+=== BENCHMARK COMPLETO — Tue May 12 07:55:54 2026
+Configuracoes testadas: LRU+LRU, HE+HE, LRU+HE
+Traces: streaming, conv, linkedlist, pattern
+
+----- TRACE: trace_streaming.txt -----
+LRU+LRU:
+  L1 acessos=665600 hits=573440 misses=92160 HR=86.15%
+  L2 acessos=92160 hits=40960 misses=51200 HR=44.44%
+  Total hits=614400 misses=143360 tempo_ms=1439773.25 ciclos=6103040
+HE+HE:
+  L1 acessos=665600 hits=573440 misses=92160 HR=86.15%
+  L2 acessos=92160 hits=44850 misses=47310 HR=48.67%
+  Total hits=618290 misses=139470 tempo_ms=1460686.89 ciclos=5752940
+LRU+HE:
+  L1 acessos=665600 hits=573440 misses=92160 HR=86.15%
+  L2 acessos=92160 hits=44850 misses=47310 HR=48.67%
+  Total hits=618290 misses=139470 tempo_ms=1388042.43 ciclos=5752940
+Delta HR-L2 (HE+HE  vs LRU+LRU): +4.22%
+Delta HR-L2 (LRU+HE vs LRU+LRU): +4.22%
+
+----- TRACE: trace_conv.txt -----
+LRU+LRU:
+  L1 acessos=126976 hits=118912 misses=8064 HR=93.65%
+  L2 acessos=8064 hits=7560 misses=504 HR=93.75%
+  Total hits=126472 misses=8568 tempo_ms=241678.41 ciclos=244912
+HE+HE:
+  L1 acessos=126976 hits=118912 misses=8064 HR=93.65%
+  L2 acessos=8064 hits=7560 misses=504 HR=93.75%
+  Total hits=126472 misses=8568 tempo_ms=242373.26 ciclos=244912
+LRU+HE:
+  L1 acessos=126976 hits=118912 misses=8064 HR=93.65%
+  L2 acessos=8064 hits=7560 misses=504 HR=93.75%
+  Total hits=126472 misses=8568 tempo_ms=255153.03 ciclos=244912
+Delta HR-L2 (HE+HE  vs LRU+LRU): +0.00%
+Delta HR-L2 (LRU+HE vs LRU+LRU): +0.00%
+
+----- TRACE: trace_linkedlist.txt -----
+LRU+LRU:
+  L1 acessos=216000 hits=109617 misses=106383 HR=50.75%
+  L2 acessos=106383 hits=14709 misses=91674 HR=13.83%
+  Total hits=124326 misses=198057 tempo_ms=663187.17 ciclos=9424107
+HE+HE:
+  L1 acessos=216000 hits=108385 misses=107615 HR=50.18%
+  L2 acessos=107615 hits=17051 misses=90564 HR=15.84%
+  Total hits=125436 misses=198179 tempo_ms=677333.94 ciclos=9335295
+LRU+HE:
+  L1 acessos=216000 hits=109617 misses=106383 HR=50.75%
+  L2 acessos=106383 hits=15798 misses=90585 HR=14.85%
+  Total hits=125415 misses=196968 tempo_ms=659243.29 ciclos=9326097
+Delta HR-L2 (HE+HE  vs LRU+LRU): +2.02%
+Delta HR-L2 (LRU+HE vs LRU+LRU): +1.02%
+
+----- TRACE: trace_pattern.txt -----
+LRU+LRU:
+  L1 acessos=144540 hits=92902 misses=51638 HR=64.27%
+  L2 acessos=51638 hits=943 misses=50695 HR=1.83%
+  Total hits=93845 misses=102333 tempo_ms=396484.57 ciclos=5171832
+HE+HE:
+  L1 acessos=144540 hits=92969 misses=51571 HR=64.32%
+  L2 acessos=51571 hits=13857 misses=37714 HR=26.87%
+  Total hits=106826 misses=89285 tempo_ms=385402.29 ciclos=4002939
+LRU+HE:
+  L1 acessos=144540 hits=92902 misses=51638 HR=64.27%
+  L2 acessos=51638 hits=13902 misses=37736 HR=26.92%
+  Total hits=106804 misses=89374 tempo_ms=386153.59 ciclos=4005522
+Delta HR-L2 (HE+HE  vs LRU+LRU): +25.04%
+Delta HR-L2 (LRU+HE vs LRU+LRU): +25.10%
+
+
+=== TABELA RESUMO ===
+Trace                     Config     HR-L1      HR-L2      Ciclos     Tempo(ms)   
+trace_streaming.txt       LRU+LRU     86.15%    44.44%   6103040    1439773.25  
+trace_streaming.txt       HE+HE       86.15%    48.67%   5752940    1460686.89  
+trace_streaming.txt       LRU+HE      86.15%    48.67%   5752940    1388042.43  
+                          ---       
+trace_conv.txt            LRU+LRU     93.65%    93.75%   244912     241678.41   
+trace_conv.txt            HE+HE       93.65%    93.75%   244912     242373.26   
+trace_conv.txt            LRU+HE      93.65%    93.75%   244912     255153.03   
+                          ---       
+trace_linkedlist.txt      LRU+LRU     50.75%    13.83%   9424107    663187.17   
+trace_linkedlist.txt      HE+HE       50.18%    15.84%   9335295    677333.94   
+trace_linkedlist.txt      LRU+HE      50.75%    14.85%   9326097    659243.29   
+                          ---       
+trace_pattern.txt         LRU+LRU     64.27%     1.83%   5171832    396484.57   
+trace_pattern.txt         HE+HE       64.32%    26.87%   4002939    385402.29   
+trace_pattern.txt         LRU+HE      64.27%    26.92%   4005522    386153.59   
+                          ---       
+Concluido em: Tue May 12 10:12:32 2026

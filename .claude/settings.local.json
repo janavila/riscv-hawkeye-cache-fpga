@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gcc -Wall benchmark_trace.c -o benchmark_trace)"
+    ]
+  }
+}
