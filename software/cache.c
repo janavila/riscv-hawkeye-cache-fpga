@@ -664,6 +664,16 @@ void hawkeye_update_on_access(CacheUnificada *cache, RequisicaoMemoria *req,
 			else
 				hawkeye_decrease(&cache->hawkeye_preditor,
 								 cache->sampler_sets[sample_set].entries[pos].pc);
+
+			/* Aging dinamico: a cada 256 misses na L2, divide todos os
+			   contadores por 2. Mantém o preditor adaptativo a mudancas
+			   de fase sem precisar de reset completo. */
+			if ((cache->misses % 256 == 0) && cache->misses > 0) {
+				for (int ai = 0; ai < HAWKEYE_PCMAP_SIZE; ai++) {
+					if (cache->hawkeye_preditor.contador[ai] > 0)
+						cache->hawkeye_preditor.contador[ai] >>= 1;
+				}
+			}
 		}
 
 		optgen_set_access(&cache->optgen_sets[req->set], currentVal);
@@ -800,6 +810,14 @@ void hawkeye_update_on_access_l1(CacheDados *cache, RequisicaoMemoria *req,
 			else
 				hawkeye_decrease(&cache->hawkeye_preditor,
 								 cache->sampler_sets[sample_set].entries[pos].pc);
+
+			/* Aging dinamico L1: mesma logica da L2 */
+			if ((cache->misses % 256 == 0) && cache->misses > 0) {
+				for (int ai = 0; ai < HAWKEYE_PCMAP_SIZE; ai++) {
+					if (cache->hawkeye_preditor.contador[ai] > 0)
+						cache->hawkeye_preditor.contador[ai] >>= 1;
+				}
+			}
 		}
 
 		optgen_set_access(&cache->optgen_sets[req->set], currentVal);

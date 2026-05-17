@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 #define HAWKEYE_PCMAP_SIZE 2048
-#define HAWKEYE_MAX_PCMAP 31
+#define HAWKEYE_MAX_PCMAP 7
 
 typedef struct
 {
