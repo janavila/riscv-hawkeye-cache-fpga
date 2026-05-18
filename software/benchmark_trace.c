@@ -120,6 +120,79 @@ void run_matrix_conv(int *img, int *out, FILE *trace)
 }
 
 /* =============================================================
+   BENCHMARK 5 — Convolucao 256x256 Multi-Pass
+   ---------------------------------------------------------
+   Imagem 256x256 = 256KB (8x L2). Working set nao cabe na L2,
+   forcando conflitos severos por set. 3 passadas dao reuso
+   temporal suficiente para o OPTgen identificar PC=201/202/203
+   como friendly enquanto PC=204 permanece averse.
+     PC=201: linha y-1 — friendly (reusada entre passadas)
+     PC=202: linha y   — friendly
+     PC=203: linha y+1 — friendly
+     PC=204: escrita saida — averse, never-reused
+   ============================================================= */
+void run_matrix_conv_256(int *img, int *out, FILE *trace)
+{
+    /* img/out (big_array/out_array) têm apenas ARRAY_SIZE=32768 ints.
+       256x256=65536 ints não cabe — alocamos buffers próprios para não
+       causar UB, mas mantemos os parâmetros para compatibilidade com o
+       call-site existente. */
+    (void)img;
+    (void)out;
+
+    printf("Gerando trace: Convolucao 256x256 Multi-Pass...\n");
+
+    int width    = 256;
+    int height   = 256;
+    int passadas = 3;
+
+    printf("  Imagem: %dx%d | Passadas: %d\n", width, height, passadas);
+
+    int *img256 = (int *)calloc((size_t)width * height, sizeof(int));
+    int *out256 = (int *)calloc((size_t)width * height, sizeof(int));
+    if (!img256 || !out256) {
+        printf("ERRO: falha na alocacao de %d ints para imagem 256x256.\n",
+               width * height);
+        free(img256);
+        free(out256);
+        return;
+    }
+    void *base = (void *)img256;
+
+    for (int it = 0; it < passadas; it++)
+    {
+        for (int y = 1; y < height - 1; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                /* PC=201: linha y-1 — reusada nas passadas seguintes (friendly) */
+                fprintf(trace, "%u %lu\n", NORM(&img256[(y - 1) * width + x], base), 201UL);
+
+                /* PC=202: linha y — reusada nas passadas seguintes (friendly) */
+                fprintf(trace, "%u %lu\n", NORM(&img256[y * width + x], base), 202UL);
+
+                /* PC=203: linha y+1 — reusada nas passadas seguintes (friendly) */
+                fprintf(trace, "%u %lu\n", NORM(&img256[(y + 1) * width + x], base), 203UL);
+
+                /* PC=204: escrita de saida em regiao distante — averse, never-reused */
+                unsigned int out_addr = (unsigned int)(ARRAY_SIZE * sizeof(int) * 4
+                                                       + (y * width + x) * sizeof(int));
+                fprintf(trace, "%u %lu\n", out_addr, 204UL);
+
+                out256[y * width + x] =
+                    img256[(y - 1) * width + x] +
+                    img256[y * width + x] +
+                    img256[(y + 1) * width + x];
+            }
+        }
+    }
+
+    free(img256);
+    free(out256);
+    printf("  -> Convolucao 256x256 concluida.\n");
+}
+
+/* =============================================================
    BENCHMARK 3 — Linked List Embaralhada com Hot Path
    ---------------------------------------------------------
    Fisher-Yates determinístico destrói localidade espacial.
@@ -237,6 +310,7 @@ void print_menu()
     printf("3. Linked List Embaralhada\n");
     printf("4. Pattern Search Conflitante\n");
     printf("5. Todos em sequencia (um arquivo por benchmark)\n");
+    printf("6. Convolucao 256x256 Multi-Pass (pressao alta)\n");
     printf("0. Sair\n");
     printf("Escolha: ");
 }
@@ -360,6 +434,18 @@ int main()
             }
 
             printf("Todos os traces gerados.\n");
+            break;
+
+        case 6:
+            trace = fopen("trace_conv256.txt", "w");
+            if (!trace)
+            {
+                printf("Erro ao abrir arquivo!\n");
+                break;
+            }
+            run_matrix_conv_256(big_array, out_array, trace);
+            fclose(trace);
+            printf("Trace salvo em: trace_conv256.txt\n");
             break;
 
         case 0:

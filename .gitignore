@@ -32,6 +32,7 @@ Thumbs.db
 
 # === Arquivos especificos === 
 trace_conv.txt
+trace_conv256.txt
 trace_linkedlist.txt
 trace_pattern.txt
 trace_streaming.txt
