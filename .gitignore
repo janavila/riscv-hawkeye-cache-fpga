@@ -38,3 +38,16 @@ trace_pattern.txt
 trace_streaming.txt
 teste.txt
 relatorio_alteracoes_hawkeye.md
+
+# ModelSim / Questa - biblioteca de simulação gerada automaticamente
+work/
+**/work/
+
+# Outros arquivos gerados por simulação
+*.vcd
+*.vvp
+transcript
+vsim.wvf
+*.wlf
+*.mpf
+*.cr.mti

@@ -1,7 +1,7 @@
 // =============================================================================
 // cache_l2.v
 // -----------------------------------------------------------------------------
-// Cache L2 unificada - traducao da CacheUnificada do seu cache.h.
+// Cache L2 unificada - traducao da CacheUnificada do  cache.h.
 //
 // PARAMETROS (do cache.h):
 //   CACHE_UNIFICADA_SIZE_BYTES = 32768
@@ -15,15 +15,15 @@
 //
 //  (1) MODELO FSM (multi-ciclo), NAO single-cycle.
 //      Diferente da L1, a L2 e uma maquina de estados. Por que? Porque quando
-//      o Hawkeye do seu colega for plugado, a politica pode levar varios ciclos
-//      para responder qual via despejar (o OPTgen dele e multi-ciclo). Entao
+//      o Hawkeye for plugado, a politica pode levar varios ciclos
+//      para responder qual via despejar (o OPTgen é multi-ciclo). Entao
 //      desenhamos a L2 ja preparada para "esperar a politica responder".
 //      Estados: IDLE -> LOOKUP -> (HIT_DONE | NEED_VICTIM -> ALLOCATE) -> DONE.
 //
 //  (2) INTERFACE DE POLITICA ABERTA.
 //      A L2 NAO decide sozinha quem despejar. Ela expoe sinais para um modulo
 //      externo de politica e recebe de volta a via vitima. Hoje ligamos um
-//      LRU simples (placeholder); seu colega troca pelo hawkeye_top depois,
+//      LRU simples (placeholder); Trocamos pelo hawkeye_top depois,
 //      SEM mexer neste arquivo.
 //
 // O QUE ARMAZENA (igual ao C, sem dados reais):
@@ -58,7 +58,7 @@ module cache_l2 #(
     output reg                   miss,
 
     // ======================================================================
-    // INTERFACE DE POLITICA (o "contrato" com o Hawkeye do colega)
+    // INTERFACE DE POLITICA (o "contrato" com o Hawkeye)
     // ----------------------------------------------------------------------
     // SAIDAS da L2 para o modulo de politica:
     output reg  [INDEX_BITS-1:0] pol_set,       // conjunto sendo acessado
@@ -97,13 +97,6 @@ module cache_l2 #(
     // always @(*) - ele NAO e sequencial no tempo, e apenas uma forma compacta
     // de descrever 8 comparadores identicos (o sintetizador "desenrola" o laco).
     // =========================================================================
-    // NOTA sobre warnings do Icarus ("@* is sensitive to all 512 words..."):
-    // Sao BENIGNOS. O Icarus apenas avisa que, como lemos valid_arr[index][..]
-    // dentro de um @(*), ele reavalia o bloco se QUALQUER palavra do array mudar
-    // (em vez de so a linha 'index'). Nao afeta correcao nem sintese; e so uma
-    // questao de eficiencia da simulacao. Se for exigido zero-warning, basta
-    // copiar a linha [index] para um vetor local antes da busca - refatoracao
-    // mecanica. Mantido assim por clareza didatica.
     reg [WAYS-1:0]     hit_vec;     // hit_vec[w] = 1 se a via w deu hit
     reg                any_hit;     // OR de todos os bits de hit_vec
     reg [WAY_BITS-1:0] hit_way_idx; // indice da via que deu hit

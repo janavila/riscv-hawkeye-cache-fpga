@@ -1,7 +1,7 @@
 // =============================================================================
 // cache_l1.v
 // -----------------------------------------------------------------------------
-// Cache L1 de dados - traducao direta da CacheDados do seu cache.h / lru.c.
+// Cache L1 de dados - traducao direta da CacheDados do cache.h / lru.c.
 //
 // PARAMETROS (do cache.h):
 //   CACHE_DADOS_SIZE_BYTES = 4096
@@ -14,7 +14,7 @@
 // MODELO DE HARDWARE: single-cycle (combinacional para a busca).
 //   - No mesmo ciclo em que um acesso valido chega, o modulo decide hit/miss,
 //     escolhe a via (hit ou vitima por LRU) e, na borda de clock, atualiza
-//     o armazenamento e os contadores. Isto espelha o comportamento do seu C,
+//     o armazenamento e os contadores. Isto espelha o comportamento do C,
 //     onde cada chamada de consulta_cache_dados resolve tudo de uma vez.
 //
 // O QUE ESTE MODULO ARMAZENA (igual ao C - sem dados reais):
@@ -24,7 +24,7 @@
 //   - hits / misses        : contadores               (CacheDados.hits/misses)
 //
 // IMPORTANTE SOBRE A POLITICA LRU DE 2 VIAS:
-//   Seu lru.c faz:
+//   lru.c faz:
 //     atualizaLru: lru_estado[0] = linha_acessada
 //     aplicaLru  : vitima = 1 - lru_estado[0]  (despeja a OUTRA via)
 //   Ou seja: a via "mais recente" e guardada; a vitima e sempre a outra.
@@ -35,8 +35,6 @@
 
 module cache_l1 #(
     // Parametros com valores default vindos do cache.h. Deixar como parametros
-    // (em vez de numeros "chumbados") facilita testar tamanhos diferentes e
-    // deixa o codigo autodocumentado.
     parameter ADDR_WIDTH   = 32,   // largura do endereco (unsigned int no C)
     parameter OFFSET_BITS  = 5,    // log2(32 bytes por bloco)
     parameter INDEX_BITS   = 6,    // log2(64 conjuntos)
@@ -62,10 +60,6 @@ module cache_l1 #(
     // =========================================================================
     // 1) DECOMPOSICAO DO ENDERECO
     // -------------------------------------------------------------------------
-    // Em C voce faz contas com /, %, >>. Em hardware, "fatiar" um endereco em
-    // offset/indice/tag e so SELECIONAR PEDACOS DE BITS - nao custa nada, e
-    // puramente fios. A notacao addr[a:b] pega os bits de a ate b.
-    //
     // Layout do endereco (do bit mais alto para o mais baixo):
     //   [ TAG (21) | INDICE (6) | OFFSET (5) ]
     // =========================================================================
@@ -81,10 +75,6 @@ module cache_l1 #(
     // declaramos os arrays "por via" (via 0 e via 1) para deixar o paralelismo
     // explicito e o codigo legivel. Poderiamos usar arrays 2D, mas com 2 vias
     // a forma abaixo e mais clara.
-    //
-    // Estes "reg [..] nome [0:N-1]" sao memorias. O sintetizador as mapeia para
-    // blocos de RAM ou bancos de flip-flops. E o equivalente direto aos seus
-    // arrays de struct em C.
     // =========================================================================
     reg                 valid0 [0:NUM_SETS-1];   // valido da via 0
     reg                 valid1 [0:NUM_SETS-1];   // valido da via 1
@@ -95,12 +85,7 @@ module cache_l1 #(
     // =========================================================================
     // 3) BUSCA (LOOKUP) - COMBINACIONAL, EM PARALELO NAS 2 VIAS
     // -------------------------------------------------------------------------
-    // Aqui esta a diferenca-chave para o C: em C voce faria um laco "for via"
-    // comparando uma via por vez. Em hardware as duas comparacoes acontecem
-    // AO MESMO TEMPO, por dois comparadores. As linhas "assign" descrevem fios
-    // que refletem o resultado continuamente.
-    //
-    // hit_way0 = a via 0 esta valida E sua tag bate?
+    // hit_way0 = a via 0 esta valida E tag bate?
     // hit_way1 = idem para a via 1.
     // =========================================================================
     wire hit_way0 = valid0[index] && (tag0[index] == tag);
@@ -118,14 +103,13 @@ module cache_l1 #(
     // 4) ESCOLHA DA VIA A ATUALIZAR
     // -------------------------------------------------------------------------
     // - Em hit:  atualizamos a via que deu hit (vira a "mais recente").
-    // - Em miss: a vitima e escolhida pelo LRU. Com 2 vias, o seu lru.c diz:
+    // - Em miss: a vitima e escolhida pelo LRU. Com 2 vias, o lru.c diz:
     //              vitima = 1 - lru_estado[0]
     //            ou seja, a via que NAO foi a ultima usada.
     //            (Se ainda houver via invalida, normalmente preferimos preencher
     //             a invalida primeiro - tratamos isso abaixo para fidelidade.)
     //
-    // Observacao sobre via invalida: seu C, no insere, procura linha invalida
-    // antes de aplicar LRU. Replicamos: se a via 0 esta invalida usamos a 0,
+    // Se a via 0 esta invalida usamos a 0,
     // senao se a via 1 esta invalida usamos a 1, senao aplicamos LRU.
     // =========================================================================
     wire victim_lru = ~lru[index];          // 1 - lru_estado[0], em 1 bit e o NOT
@@ -143,16 +127,11 @@ module cache_l1 #(
     // Tudo que MUDA ESTADO acontece aqui, com "<=", na borda de subida.
     // Isto inclui: preencher tag/valid numa via (em miss), atualizar o bit LRU
     // (em qualquer acesso valido), e incrementar hit_count/miss_count.
-    //
-    // Note que a LEITURA (lookup) foi combinacional acima, e a ESCRITA e aqui.
-    // Esse padrao "leia combinacional, escreva no clock" e o coracao de quase
-    // todo modulo de memoria em Verilog.
     // =========================================================================
     integer i;
     always @(posedge clk) begin
         if (rst) begin
-            // Zera todo o estado. Em hardware real, RAMs nem sempre tem reset
-            // em massa; aqui fazemos para a simulacao comecar limpa, igual ao
+            // Zera todo o estado.Aqui fazemos para a simulacao comecar limpa, igual ao
             // inicializa_cache_dados do C.
             for (i = 0; i < NUM_SETS; i = i + 1) begin
                 valid0[i] <= 1'b0;
