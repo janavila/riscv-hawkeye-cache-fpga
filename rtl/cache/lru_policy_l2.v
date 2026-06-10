@@ -45,7 +45,8 @@ module lru_policy_l2 #(
     input  wire                   pol_need_victim,
 
     // resposta para a L2
-    output wire [WAY_BITS-1:0]    pol_victim_way
+    output wire [WAY_BITS-1:0]    pol_victim_way,
+    output wire                   pol_victim_valid
 );
 
     // idade de cada via de cada conjunto
@@ -67,6 +68,7 @@ module lru_policy_l2 #(
         end
     end
     assign pol_victim_way = victim;
+    assign pol_victim_valid = pol_need_victim;
 
     // ------ ATUALIZACAO DAS IDADES (sincrona) ------
     // Em cada acesso valido ao conjunto, a via "tocada" zera e as outras

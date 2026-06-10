@@ -41,27 +41,76 @@ module tb_cache_l2;
     wire [2:0]  pol_hit_way;
     wire        pol_need_victim;
     wire [2:0]  pol_victim_way;
+    wire        pol_victim_valid;
+    wire [31:0] pol_addr;
+    wire        pol_fill;
+    wire [2:0]  pol_fill_way;
 
     // ------ instancia da L2 ------
+        // ------ instancia da L2 ------
     cache_l2 dut (
-        .clk(clk), .rst(rst),
-        .req_valid(req_valid), .req_addr(req_addr), .req_pc(req_pc),
-        .done(done), .hit(hit), .miss(miss),
-        .pol_set(pol_set), .pol_pc(pol_pc), .pol_access(pol_access),
-        .pol_hit(pol_hit), .pol_hit_way(pol_hit_way),
-        .pol_need_victim(pol_need_victim), .pol_victim_way(pol_victim_way),
-        .hit_count(hit_count), .miss_count(miss_count)
+        .clk(clk),
+        .rst(rst),
+
+        .req_valid(req_valid),
+        .req_addr(req_addr),
+        .req_pc(req_pc),
+
+        .done(done),
+        .hit(hit),
+        .miss(miss),
+
+        .pol_set(pol_set),
+        .pol_pc(pol_pc),
+        .pol_addr(pol_addr),
+        .pol_access(pol_access),
+        .pol_hit(pol_hit),
+        .pol_hit_way(pol_hit_way),
+        .pol_need_victim(pol_need_victim),
+        .pol_victim_way(pol_victim_way),
+        .pol_victim_valid(pol_victim_valid),
+        .pol_fill(pol_fill),
+        .pol_fill_way(pol_fill_way),
+
+        .hit_count(hit_count),
+        .miss_count(miss_count)
     );
 
     // ------ instancia da POLITICA (placeholder LRU) ------
     // >>> E AQUI que o colega vai trocar para hawkeye_top no futuro <<<
-    lru_policy_l2 pol (
-        .clk(clk), .rst(rst),
-        .pol_set(pol_set), .pol_pc(pol_pc), .pol_access(pol_access),
-        .pol_hit(pol_hit), .pol_hit_way(pol_hit_way),
-        .pol_need_victim(pol_need_victim),
-        .pol_victim_way(pol_victim_way)
-    );
+        // ------ instancia da POLITICA (placeholder LRU) ------
+    //lru_policy_l2 pol (
+    //    .clk(clk),
+    //    .rst(rst),
+//
+    //    .pol_set(pol_set),
+    //    .pol_pc(pol_pc),
+    //    .pol_access(pol_access),
+    //    .pol_hit(pol_hit),
+    //    .pol_hit_way(pol_hit_way),
+    //    .pol_need_victim(pol_need_victim),
+//
+    //    .pol_victim_way(pol_victim_way),
+    //    .pol_victim_valid(pol_victim_valid)
+    //);
+
+    hawkeye_l2_policy pol (
+    .clk(clk),
+    .rst(rst),
+
+    .pol_set(pol_set),
+    .pol_pc(pol_pc),
+    .pol_addr(pol_addr),
+    .pol_access(pol_access),
+    .pol_hit(pol_hit),
+    .pol_hit_way(pol_hit_way),
+    .pol_need_victim(pol_need_victim),
+    .pol_fill(pol_fill),
+    .pol_fill_way(pol_fill_way),
+
+    .pol_victim_way(pol_victim_way),
+    .pol_victim_valid(pol_victim_valid)
+);
 
     // ------ clock ------
     always #5 clk = ~clk;
@@ -80,6 +129,14 @@ module tb_cache_l2;
             $display("[t=%0t] acesso %0s addr=0x%08h -> %s",
                      $time, rotulo, endereco, hit ? "HIT " : "MISS");
             @(negedge clk);
+        end
+    endtask
+    task espera_ciclos(input integer n);
+        integer j;
+        begin
+            for(j = 0; j < n; j = j + 1) begin
+                @(negedge clk);
+            end
         end
     endtask
 
@@ -108,10 +165,16 @@ module tb_cache_l2;
         // A politica LRU escolhe a via mais velha para despejar.
         acesso(32'h00008000, 32'hBBBB, "new-8");       // esperado MISS
 
-        $display("---------------------------------------------------------");
-        $display(" Total: hits=%0d  misses=%0d", hit_count, miss_count);
-        $display(" Esperado: 8 fills (miss) + 1 hit + 1 miss = hits=1 misses=9");
-        $display("---------------------------------------------------------");
+        // Reacessa o endereco 0x1000.
+        // Como no teste anterior o RRIP escolheu a way 1 como vitima,
+        // esse bloco provavelmente foi removido. Entao esperamos MISS.
+        acesso(32'h00001000, 32'h00000001, "re-1-evicted");
+        espera_ciclos(20);
+        
+        acesso(32'h00001000, 32'h00000001, "re-1-again");
+        espera_ciclos(20);$display("---------------------------------------------------------");
+        $display(" Total: hits=%0d  misses=%0d", hit_count, miss_count);       
+        $display(" Esperado: 8 fills (miss) + 1 hit + 1 miss + 1 miss + 1 hit = hits=2 misses=10");        $display("---------------------------------------------------------");
 
         #20;
         $finish;

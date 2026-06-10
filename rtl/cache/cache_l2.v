@@ -67,8 +67,12 @@ module cache_l2 #(
     output reg                   pol_hit,       // o acesso foi hit?
     output reg  [WAY_BITS-1:0]   pol_hit_way,   // se hit, em qual via
     output reg                   pol_need_victim,// pulso: preciso de uma vitima
+    output reg  [ADDR_WIDTH-1:0]  pol_addr,
+    output reg                   pol_fill,
+    output reg  [WAY_BITS-1:0]   pol_fill_way,
     // ENTRADA vinda do modulo de politica:
     input  wire [WAY_BITS-1:0]   pol_victim_way, // via que a politica mandou despejar
+    input  wire                  pol_victim_valid, // 1 quando pol_victim_way esta valido
     // ======================================================================
 
     // ------ Contadores ------
@@ -114,18 +118,25 @@ module cache_l2 #(
             end
         end
     end
-
-    // Detecta primeira via invalida (preenchemos vazias antes de despejar).
-    reg                has_invalid;
-    reg [WAY_BITS-1:0] invalid_way;
+    // registradores que "congelam" o acesso enquanto a FSM trabalha
+    reg [INDEX_BITS-1:0] cur_index;
+    reg [TAG_BITS-1:0]   cur_tag;
+    reg                  cur_hit;
+    reg [WAY_BITS-1:0]   cur_hit_way;
+    reg [WAY_BITS-1:0]   target_way;   // via onde vamos instalar (miss)
+    // Detecta primeira via invalida usando o acesso congelado.
+    // Importante para FSM multi-ciclo: usa cur_index, nao index direto de req_addr.
+    reg                has_invalid_cur;
+    reg [WAY_BITS-1:0] invalid_way_cur;
     integer k;
     always @(*) begin
-        has_invalid = 1'b0;
-        invalid_way = {WAY_BITS{1'b0}};
+        has_invalid_cur = 1'b0;
+        invalid_way_cur = {WAY_BITS{1'b0}};
+    
         for (k = WAYS-1; k >= 0; k = k - 1) begin
-            if (!valid_arr[index][k]) begin
-                has_invalid = 1'b1;
-                invalid_way = k[WAY_BITS-1:0];
+            if (!valid_arr[cur_index][k]) begin
+                has_invalid_cur = 1'b1;
+                invalid_way_cur = k[WAY_BITS-1:0];
             end
         end
     end
@@ -151,13 +162,6 @@ module cache_l2 #(
 
     reg [2:0] estado;
 
-    // registradores que "congelam" o acesso enquanto a FSM trabalha
-    reg [INDEX_BITS-1:0] cur_index;
-    reg [TAG_BITS-1:0]   cur_tag;
-    reg                  cur_hit;
-    reg [WAY_BITS-1:0]   cur_hit_way;
-    reg [WAY_BITS-1:0]   target_way;   // via onde vamos instalar (miss)
-
     integer s, v;
     always @(posedge clk) begin
         if (rst) begin
@@ -170,6 +174,18 @@ module cache_l2 #(
             pol_access      <= 1'b0;
             pol_need_victim <= 1'b0;
             pol_hit         <= 1'b0;
+            pol_addr        <= 0;
+            pol_set     <= 0;
+            pol_pc      <= 0;
+            pol_hit_way <= 0;
+            pol_fill      <= 1'b0;
+            pol_fill_way  <= 0;
+            pol_fill        <= 1'b0;
+            cur_index   <= 0;
+            cur_tag     <= 0;
+            cur_hit     <= 0;
+            cur_hit_way <= 0;
+            target_way  <= 0;
             // zera armazenamento (igual inicializa_cache_unificada)
             for (s = 0; s < NUM_SETS; s = s + 1)
                 for (v = 0; v < WAYS; v = v + 1) begin
@@ -182,6 +198,7 @@ module cache_l2 #(
             done            <= 1'b0;
             pol_access      <= 1'b0;
             pol_need_victim <= 1'b0;
+            pol_fill        <= 1'b0;
 
             case (estado)
                 // ---------------------------------------------------------
@@ -201,6 +218,7 @@ module cache_l2 #(
                         pol_hit_way <= hit_way_idx;
                         pol_access  <= 1'b1;       // pulso de acesso
                         estado      <= LOOKUP;
+                        pol_addr <= req_addr;
                     end
                 end
                 // ---------------------------------------------------------
@@ -215,9 +233,9 @@ module cache_l2 #(
                     else begin
                         // MISS: contabiliza e decide onde instalar
                         miss_count <= miss_count + 32'd1;
-                        if (has_invalid) begin
-                            // ha via livre: instala nela, sem pedir vitima
-                            target_way <= invalid_way;
+                       if (has_invalid_cur) begin
+                            // ha via livre no set congelado: instala nela, sem pedir vitima
+                            target_way <= invalid_way_cur;
                             estado     <= ALLOCATE;
                         end
                         else begin
@@ -235,14 +253,20 @@ module cache_l2 #(
                     // entao pol_victim_way ja esta valido aqui. Quando o
                     // Hawkeye multi-ciclo entrar, este estado podera esperar
                     // um 'pol_victim_valid' antes de seguir.
-                    target_way <= pol_victim_way;
-                    estado     <= ALLOCATE;
+                    if (pol_victim_valid) begin
+                        target_way <= pol_victim_way;
+                        estado     <= ALLOCATE;
+                    end
                 end
                 // ---------------------------------------------------------
                 ALLOCATE: begin
                     // instala o novo bloco na via alvo
                     valid_arr[cur_index][target_way] <= 1'b1;
                     tag_arr[cur_index][target_way]   <= cur_tag;
+
+                    // avisa a politica qual via foi preenchida
+                    pol_fill     <= 1'b1;
+                    pol_fill_way <= target_way;
                     estado <= FINISH;
                 end
                 // ---------------------------------------------------------
