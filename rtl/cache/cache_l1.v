@@ -39,7 +39,8 @@ module cache_l1 #(
     parameter OFFSET_BITS  = 5,    // log2(32 bytes por bloco)
     parameter INDEX_BITS   = 6,    // log2(64 conjuntos)
     parameter NUM_SETS     = 64,   // 2^INDEX_BITS
-    parameter TAG_BITS     = 21    // ADDR_WIDTH - INDEX_BITS - OFFSET_BITS
+    parameter TAG_BITS     = 21,   // ADDR_WIDTH - INDEX_BITS - OFFSET_BITS
+    parameter AUTO_FILL_ON_MISS = 1   
 )(
     input  wire                  clk,
     input  wire                  rst,        // reset sincrono, ativo alto
@@ -47,6 +48,11 @@ module cache_l1 #(
     // ------ Interface de requisicao ------
     input  wire                  req_valid,  // 1 = ha um acesso valido neste ciclo
     input  wire [ADDR_WIDTH-1:0] req_addr,   // endereco do acesso
+    // ------ Interface opcional de fill controlado ------
+    // Usada quando AUTO_FILL_ON_MISS = 0.
+    // Em uma hierarquia real, a L1 só instala o bloco quando a L2/memória responde.
+    input  wire                  fill_valid,
+    input  wire [ADDR_WIDTH-1:0] fill_addr,
 
     // ------ Resultado (combinacional, valido no mesmo ciclo) ------
     output wire                  hit,        // 1 = acerto na L1
@@ -66,6 +72,9 @@ module cache_l1 #(
     wire [OFFSET_BITS-1:0] offset = req_addr[OFFSET_BITS-1 : 0];
     wire [INDEX_BITS-1:0]  index  = req_addr[OFFSET_BITS + INDEX_BITS - 1 : OFFSET_BITS];
     wire [TAG_BITS-1:0]    tag    = req_addr[ADDR_WIDTH-1 : OFFSET_BITS + INDEX_BITS];
+    
+    wire [INDEX_BITS-1:0]  fill_index = fill_addr[OFFSET_BITS + INDEX_BITS - 1 : OFFSET_BITS];
+    wire [TAG_BITS-1:0]    fill_tag   = fill_addr[ADDR_WIDTH-1 : OFFSET_BITS + INDEX_BITS];
     // (offset nao e usado para hit/miss, mas fica aqui para documentar o layout)
 
     // =========================================================================
@@ -121,6 +130,16 @@ module cache_l1 #(
     wire chosen_way = lookup_hit ? hit_way
                                  : (has_invalid ? invalid_way : victim_lru);
 
+    
+    // Escolha da via para um fill externo/controlado.
+    // Usa o estado do conjunto apontado por fill_addr.
+    wire fill_victim_lru = ~lru[fill_index];
+
+    wire fill_has_invalid = !valid0[fill_index] || !valid1[fill_index];
+    wire fill_invalid_way = !valid0[fill_index] ? 1'b0 : 1'b1;
+
+    wire fill_chosen_way = fill_has_invalid ? fill_invalid_way : fill_victim_lru;
+    
     // =========================================================================
     // 5) ATUALIZACAO SINCRONA (na borda de clock)
     // -------------------------------------------------------------------------
@@ -131,8 +150,7 @@ module cache_l1 #(
     integer i;
     always @(posedge clk) begin
         if (rst) begin
-            // Zera todo o estado.Aqui fazemos para a simulacao comecar limpa, igual ao
-            // inicializa_cache_dados do C.
+            // Zera todo o estado.
             for (i = 0; i < NUM_SETS; i = i + 1) begin
                 valid0[i] <= 1'b0;
                 valid1[i] <= 1'b0;
@@ -143,28 +161,59 @@ module cache_l1 #(
             hit_count  <= 32'd0;
             miss_count <= 32'd0;
         end
-        else if (req_valid) begin
-            // ---- contadores ----
-            if (lookup_hit) hit_count  <= hit_count  + 32'd1;
-            else            miss_count <= miss_count + 32'd1;
+        else begin
+            // -------------------------------------------------------------
+            // Acesso normal da CPU/L1
+            // -------------------------------------------------------------
+            if (req_valid) begin
+                // ---- contadores ----
+                if (lookup_hit)
+                    hit_count <= hit_count + 32'd1;
+                else
+                    miss_count <= miss_count + 32'd1;
 
-            // ---- em miss, instala o bloco na via escolhida ----
-            // (em hit nao mexemos em tag/valid; a linha ja esta la)
-            if (!lookup_hit) begin
-                if (chosen_way == 1'b0) begin
-                    valid0[index] <= 1'b1;
-                    tag0[index]   <= tag;
-                end else begin
-                    valid1[index] <= 1'b1;
-                    tag1[index]   <= tag;
+                // ---- modo antigo: auto-fill em miss ----
+                // Mantem compatibilidade com os testbenches antigos.
+                if (!lookup_hit && AUTO_FILL_ON_MISS) begin
+                    if (chosen_way == 1'b0) begin
+                        valid0[index] <= 1'b1;
+                        tag0[index]   <= tag;
+                    end
+                    else begin
+                        valid1[index] <= 1'b1;
+                        tag1[index]   <= tag;
+                    end
+
+                    // No modo antigo, o bloco instalado vira o mais recente.
+                    lru[index] <= chosen_way;
+                end
+                else if (lookup_hit) begin
+                    // Em hit, a via acessada vira a mais recente.
+                    lru[index] <= chosen_way;
                 end
             end
 
-            // ---- atualiza LRU: a via acessada vira a "mais recente" ----
-            // Espelha atualizaLru: lru_estado[0] = linha_acessada.
-            lru[index] <= chosen_way;
+            // -------------------------------------------------------------
+            // Fill controlado pela hierarquia
+            // -------------------------------------------------------------
+            // Usado quando AUTO_FILL_ON_MISS = 0.
+            // A hierarquia chama fill_valid depois que a L2/memória respondeu.
+            if ((AUTO_FILL_ON_MISS == 0) && fill_valid) begin
+                if (fill_chosen_way == 1'b0) begin
+                    valid0[fill_index] <= 1'b1;
+                    tag0[fill_index]   <= fill_tag;
+                end
+                else begin
+                    valid1[fill_index] <= 1'b1;
+                    tag1[fill_index]   <= fill_tag;
+                end
+
+                // O bloco preenchido vira o mais recente.
+                lru[fill_index] <= fill_chosen_way;
+            end
         end
     end
 
 endmodule
 // ===== fim do cache_l1.v =====
+
