@@ -20,6 +20,11 @@
 // =============================================================================
 
 `timescale 1ns/1ps
+`ifdef HAWKEYE_QUIET
+`define HAWKEYE_PRINT if (0) $display
+`else
+`define HAWKEYE_PRINT $display
+`endif
 
 module hawkeye_l2_policy #(
     parameter SET_BITS   = 6,
@@ -171,7 +176,7 @@ module hawkeye_l2_policy #(
             // pulso de 1 ciclo
             pol_victim_valid <= 1'b0;
             if(hawkeye_training_done) begin
-                $display("[HAWKEYE_L2 t=%0t] TRAINING DONE: friendly=%0d averse=%0d sampler_hit=%0d state=%0d",
+                `HAWKEYE_PRINT("[HAWKEYE_L2 t=%0t] TRAINING DONE: friendly=%0d averse=%0d sampler_hit=%0d state=%0d",
                          $time,
                          hawkeye_friendly,
                          hawkeye_averse,
@@ -183,7 +188,7 @@ module hawkeye_l2_policy #(
             // Acesso recebido da L2
             // -------------------------------------------------------------
              if(pol_access) begin
-                 $display("[HAWKEYE_L2 t=%0t] acesso: set=%0d pc=0x%08h addr=0x%08h hit=%0d hit_way=%0d",
+                 `HAWKEYE_PRINT("[HAWKEYE_L2 t=%0t] acesso: set=%0d pc=0x%08h addr=0x%08h hit=%0d hit_way=%0d",
                           $time, pol_set, pol_pc, pol_addr, pol_hit, pol_hit_way);
 
                                  // Guarda a predicao para usar no fill.
@@ -191,13 +196,13 @@ module hawkeye_l2_policy #(
                 pred_friendly_latched <= hawkeye_friendly;
                 pred_averse_latched   <= hawkeye_averse;
                 
-                $display("[HAWKEYE_L2 t=%0t] hawkeye_top: valid=%0d friendly=%0d averse=%0d sampler_hit=%0d state=%0d busy=%0d done=%0d sig=%0d sample_set=%0d time=%0d", $time, hawkeye_prediction_valid, hawkeye_friendly, hawkeye_averse, hawkeye_sampler_hit_debug, hawkeye_controller_state_debug, hawkeye_training_busy, hawkeye_training_done, hawkeye_signature_debug, hawkeye_sample_set_debug, hawkeye_current_time_debug);
+                `HAWKEYE_PRINT("[HAWKEYE_L2 t=%0t] hawkeye_top: valid=%0d friendly=%0d averse=%0d sampler_hit=%0d state=%0d busy=%0d done=%0d sig=%0d sample_set=%0d time=%0d", $time, hawkeye_prediction_valid, hawkeye_friendly, hawkeye_averse, hawkeye_sampler_hit_debug, hawkeye_controller_state_debug, hawkeye_training_busy, hawkeye_training_done, hawkeye_signature_debug, hawkeye_sample_set_debug, hawkeye_current_time_debug);
 
                                  // Em hit, a linha foi reutilizada, entao fica protegida.
                  if(pol_hit) begin
                      rrpv_table[pol_set][pol_hit_way] <= RRPV_HIT;
 
-                                     $display("[HAWKEYE_L2 t=%0t] RRIP hit update: set=%0d way=%0d rrpv=0",
+                                     `HAWKEYE_PRINT("[HAWKEYE_L2 t=%0t] RRIP hit update: set=%0d way=%0d rrpv=0",
                               $time, pol_set, pol_hit_way);
                  end
             end             
@@ -208,13 +213,13 @@ module hawkeye_l2_policy #(
                 if(pred_friendly_latched) begin
                     rrpv_table[pol_set][pol_fill_way] <= RRPV_FRIENDLY;
 
-                    $display("[HAWKEYE_L2 t=%0t] fill FRIENDLY: set=%0d way=%0d addr=0x%08h rrpv=%0d",
+                    `HAWKEYE_PRINT("[HAWKEYE_L2 t=%0t] fill FRIENDLY: set=%0d way=%0d addr=0x%08h rrpv=%0d",
                              $time, pol_set, pol_fill_way, pol_addr, RRPV_FRIENDLY);
                 end
                 else begin
                     rrpv_table[pol_set][pol_fill_way] <= RRPV_AVERSE;
 
-                    $display("[HAWKEYE_L2 t=%0t] fill AVERSE: set=%0d way=%0d addr=0x%08h rrpv=%0d",
+                    `HAWKEYE_PRINT("[HAWKEYE_L2 t=%0t] fill AVERSE: set=%0d way=%0d addr=0x%08h rrpv=%0d",
                              $time, pol_set, pol_fill_way, pol_addr, RRPV_AVERSE);
                 end
             end
@@ -226,7 +231,7 @@ module hawkeye_l2_policy #(
                 pending_victim <= 1'b1;
                 pending_set    <= pol_set;
 
-                $display("[HAWKEYE_L2 t=%0t] pedido de vitima RRIP: set=%0d",
+                `HAWKEYE_PRINT("[HAWKEYE_L2 t=%0t] pedido de vitima RRIP: set=%0d",
                          $time, pol_set);
             end
 
@@ -240,7 +245,7 @@ module hawkeye_l2_policy #(
                     pol_victim_valid <= 1'b1;
                     pending_victim   <= 1'b0;
 
-                    $display("[HAWKEYE_L2 t=%0t] vitima RRIP pronta: set=%0d way=%0d",
+                    `HAWKEYE_PRINT("[HAWKEYE_L2 t=%0t] vitima RRIP pronta: set=%0d way=%0d",
                              $time, pending_set, rrpv_victim_way);
                 end
                 else begin
@@ -250,7 +255,7 @@ module hawkeye_l2_policy #(
                             rrpv_table[pending_set][w] <= rrpv_table[pending_set][w] + 1'b1;
                     end
 
-                    $display("[HAWKEYE_L2 t=%0t] aging RRIP no set=%0d",
+                    `HAWKEYE_PRINT("[HAWKEYE_L2 t=%0t] aging RRIP no set=%0d",
                              $time, pending_set);
                 end
             end
