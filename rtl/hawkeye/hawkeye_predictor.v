@@ -142,6 +142,20 @@ module hawkeye_predictor #(
     reg [COUNTER_BITS-1:0] ram_train   [0:PREDICTOR_ENTRIES-1];
 
     // -------------------------------------------------------------------------
+    // Inicialização SOMENTE para simulação.
+    // Em hardware, não usamos reset de conteúdo para preservar inferência de RAM.
+    // -------------------------------------------------------------------------
+    `ifdef SIMULATION
+    integer init_i;
+    
+    initial begin
+        for (init_i = 0; init_i < PREDICTOR_ENTRIES; init_i = init_i + 1) begin
+            ram_predict[init_i] = INIT_VALUE;
+            ram_train  [init_i] = INIT_VALUE;
+        end
+    end
+    `endif
+    // -------------------------------------------------------------------------
     // Saidas registradas das RAMs
     // -------------------------------------------------------------------------
     reg [COUNTER_BITS-1:0] counter_predict_r;

@@ -59,14 +59,15 @@ module hawkeye_training_controller #(
 );
 
     localparam [3:0] IDLE               = 4'd0;
-    localparam [3:0] DECIDE_PATH        = 4'd1;
-    localparam [3:0] START_OPTGEN_CHECK = 4'd2;
-    localparam [3:0] WAIT_OPTGEN_CHECK  = 4'd3;
-    localparam [3:0] TRAIN_PREDICTOR    = 4'd4;
-    localparam [3:0] START_SET_ACCESS   = 4'd5;
-    localparam [3:0] WAIT_SET_ACCESS    = 4'd6;
-    localparam [3:0] UPDATE_SAMPLER     = 4'd7;
-    localparam [3:0] DONE_STATE         = 4'd8;
+    localparam [3:0] WAIT_SAMPLER_READ  = 4'd1;
+    localparam [3:0] DECIDE_PATH        = 4'd2;
+    localparam [3:0] START_OPTGEN_CHECK = 4'd3;
+    localparam [3:0] WAIT_OPTGEN_CHECK  = 4'd4;
+    localparam [3:0] TRAIN_PREDICTOR    = 4'd5;
+    localparam [3:0] START_SET_ACCESS   = 4'd6;
+    localparam [3:0] WAIT_SET_ACCESS    = 4'd7;
+    localparam [3:0] UPDATE_SAMPLER     = 4'd8;
+    localparam [3:0] DONE_STATE         = 4'd9;
 
     reg [3:0] state;
 
@@ -74,7 +75,14 @@ module hawkeye_training_controller #(
         Guardamos o resultado do OPTgen para usar no estado de treino.
     */
     reg should_cache_reg;
-
+    /*
+    Registradores para alinhar sinais vindos de RAM síncrona.
+    O sampler_hit e pc_anterior não devem ser usados crus no mesmo ciclo
+    do access_valid, porque o sampler agora usa RAM.
+    */
+    reg                  access_miss_reg;
+    reg                  sampler_hit_reg;
+    reg [PC_BITS-1:0]    pc_anterior_reg;
     assign state_debug = state;
 
     always @(posedge clk) begin
@@ -95,6 +103,9 @@ module hawkeye_training_controller #(
             done                    <= 1'b0;
 
             should_cache_reg        <= 1'b0;
+            access_miss_reg      <= 1'b0;
+            sampler_hit_reg      <= 1'b0;
+            pc_anterior_reg      <= {PC_BITS{1'b0}};
         end
         else begin
             /*
@@ -118,14 +129,32 @@ module hawkeye_training_controller #(
                     Espera um novo acesso.
                 */
                 IDLE: begin
-                    busy <= 1'b0;
-
-                    if (access_valid) begin
-                        busy  <= 1'b1;
-                        state <= DECIDE_PATH;
-                    end
+                    busy <= 1'b0;   
+                                  if (access_valid) begin
+                      busy <= 1'b1; 
+                                      /*
+                          Guarda o miss do acesso atual, porque access1;    
+                                      /*
+                          Guarda o miss do acesso atual, porque access_miss pode ser pulso.
+                          O sampler será lido agora, mas o resultado só ficará válido depois.
+                      */
+                      access_miss_reg <= access_miss;   
+                                      state <= WAIT_SAMPLER_READ;
+                  end
                 end
+                WAIT_SAMPLER_READ: begin
+                    busy <= 1'b1;
 
+                    /*
+                        Espera 1 ciclo para o sampler entregar sampler_hit e pc_anterior.
+                        Como o sampler foi convertido para RAM síncrona, esses sinais precisam
+                        ser registrados antes da decisão.
+                    */
+                    sampler_hit_reg <= sampler_hit;
+                    pc_anterior_reg <= pc_anterior;
+
+                    state <= DECIDE_PATH;
+                end
                 /*
                     Decide qual caminho seguir.
 
@@ -139,7 +168,10 @@ module hawkeye_training_controller #(
                 DECIDE_PATH: begin
                     busy <= 1'b1;
 
-                    if (sampler_hit && access_miss) begin
+                    /*
+                        Usa os sinais registrados, não os sinais crus.
+                    */
+                    if (sampler_hit_reg && access_miss_reg) begin
                         state <= START_OPTGEN_CHECK;
                     end
                     else begin
@@ -185,8 +217,7 @@ module hawkeye_training_controller #(
                     busy <= 1'b1;
 
                     predictor_train_enable <= 1'b1;
-                    pc_train <= pc_anterior;
-
+                    pc_train <= pc_anterior_reg;
                     if (should_cache_reg) begin
                         predictor_train_up   <= 1'b1;
                         predictor_train_down <= 1'b0;
