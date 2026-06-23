@@ -33,13 +33,13 @@ module hawkeye_top #(
 
     /*
         Tamanho efetivo usado pelo OPTgen.
-        Para começar, pode ser a associatividade.
+        Para comeÃƒÂ§ar, pode ser a associatividade.
         Exemplo: cache_size = 2, 4 ou 8.
     */
     input  wire [CACHE_SIZE_BITS-1:0]   optgen_cache_size,
 
     /*
-        Saídas para RRIP/cache.
+        SaÃƒÂ­das para RRIP/cache.
     */
     output wire                         prediction_valid,
     output wire                         friendly,
@@ -114,7 +114,7 @@ module hawkeye_top #(
 
     /*
         OPTGEN_SIZE = 128 = 2^7.
-        Então current_val = current_time % 128
+        EntÃƒÂ£o current_val = current_time % 128
         vira current_time[6:0].
     */
     assign current_val = current_time[OPTGEN_INDEX_BITS-1:0];
@@ -330,5 +330,5 @@ module hawkeye_top #(
             end
         end
     end
-
-endmodule   
+	 
+endmodule
