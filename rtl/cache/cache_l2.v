@@ -322,7 +322,7 @@ module cache_l2 #(
     parameter TAG_BITS    = 20,
     parameter WAYS        = 8,
     parameter WAY_BITS    = 3
-)(
+) (
     input  wire                  clk,
     input  wire                  rst,
 

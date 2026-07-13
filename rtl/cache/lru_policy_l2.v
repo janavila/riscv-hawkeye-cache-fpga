@@ -32,7 +32,8 @@ module lru_policy_l2 #(
     parameter WAY_BITS   = 3,
     parameter AGE_BITS   = 3,             // 3 bits => idades 0..7 (8 vias)
     parameter ADDR_WIDTH = 32
-)(
+    
+) (
     input  wire                   clk,
     input  wire                   rst,
 

@@ -33,7 +33,8 @@ module hawkeye_l2_policy #(
     parameter ADDR_WIDTH = 32,
     parameter WAYS       = 8,
     parameter WAY_BITS   = 3,
-    parameter RRPV_BITS  = 3
+    parameter RRPV_BITS  = 3,
+    parameter [7:0] OPTGEN_CACHE_SIZE = 8'd8
 )(
     input  wire                  clk,
     input  wire                  rst,
@@ -119,7 +120,7 @@ module hawkeye_l2_policy #(
         .access_miss(access_miss_hawkeye),
     
         // Capacidade efetiva inicial usada pelo OPTgen para L2 8-way.
-        .optgen_cache_size(8'd8),
+        .optgen_cache_size(OPTGEN_CACHE_SIZE),
     
         .prediction_valid(hawkeye_prediction_valid),
         .friendly(hawkeye_friendly),

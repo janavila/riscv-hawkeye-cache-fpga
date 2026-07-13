@@ -12,7 +12,12 @@
 
 `timescale 1ns/1ps
 
-module cache_hierarchy_top (
+module cache_hierarchy_top #( 
+     //parametrização para tb reduzido e validação
+    parameter integer L2_WAYS = 8,
+    parameter integer L2_WAY_BITS = 3,
+    parameter [7:0] OPTGEN_CACHE_SIZE = 8'd8
+    )(
     input  wire        clk,
     input  wire        rst,
 
@@ -40,6 +45,8 @@ module cache_hierarchy_top (
 
     // Debug simples de estado
     output reg  [2:0]  state_debug
+
+  
 );
 
     // =========================================================================
@@ -89,11 +96,11 @@ module cache_hierarchy_top (
     wire [31:0] pol_addr;
     wire        pol_access;
     wire        pol_hit;
-    wire [2:0]  pol_hit_way;
+    wire [L2_WAY_BITS-1:0]  pol_hit_way;
     wire        pol_need_victim;
     wire        pol_fill;
-    wire [2:0]  pol_fill_way;
-    wire [2:0]  pol_victim_way;
+    wire [L2_WAY_BITS-1:0]  pol_fill_way;
+    wire [L2_WAY_BITS-1:0]  pol_victim_way;
     wire        pol_victim_valid;
 
     // =========================================================================
@@ -125,7 +132,10 @@ module cache_hierarchy_top (
     // =========================================================================
     // Instancia da L2
     // =========================================================================
-    cache_l2 u_l2 (
+    cache_l2 #(
+        .WAYS    (L2_WAYS),
+        .WAY_BITS(L2_WAY_BITS)
+    )u_l2 (
         .clk(clk),
         .rst(rst),
 
@@ -156,7 +166,11 @@ module cache_hierarchy_top (
     // =========================================================================
     // Politica Hawkeye da L2
     // =========================================================================
-    hawkeye_l2_policy u_policy (
+    hawkeye_l2_policy #(
+        .WAYS             (L2_WAYS),
+        .WAY_BITS         (L2_WAY_BITS),
+        .OPTGEN_CACHE_SIZE(OPTGEN_CACHE_SIZE)
+    ) u_policy (
         .clk(clk),
         .rst(rst),
 
