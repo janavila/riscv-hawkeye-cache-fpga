@@ -1,0 +1,394 @@
+ -- Copyright (C) 1991-2013 Altera Corporation
+ -- Your use of Altera Corporation's design tools, logic functions 
+ -- and other software and tools, and its AMPP partner logic 
+ -- functions, and any output files from any of the foregoing 
+ -- (including device programming or simulation files), and any 
+ -- associated documentation or information are expressly subject 
+ -- to the terms and conditions of the Altera Program License 
+ -- Subscription Agreement, Altera MegaCore Function License 
+ -- Agreement, or other applicable license agreement, including, 
+ -- without limitation, that your use is for the sole purpose of 
+ -- programming logic devices manufactured by Altera and sold by 
+ -- Altera or its authorized distributors.  Please refer to the 
+ -- applicable agreement for further details.
+ -- 
+ -- This is a Quartus II output file. It is for reporting purposes only, and is
+ -- not intended for use as a Quartus II input file. This file cannot be used
+ -- to make Quartus II pin assignments - for instructions on how to make pin
+ -- assignments, please see Quartus II help.
+ ---------------------------------------------------------------------------------
+
+
+
+ ---------------------------------------------------------------------------------
+ -- NC            : No Connect. This pin has no internal connection to the device.
+ -- DNU           : Do Not Use. This pin MUST NOT be connected.
+ -- VCCINT        : Dedicated power pin, which MUST be connected to VCC  (1.2V).
+ -- VCCIO         : Dedicated power pin, which MUST be connected to VCC
+ --                 of its bank.
+ --					Bank 1:		2.5V
+ --					Bank 2:		2.5V
+ --					Bank 3:		2.5V
+ --					Bank 4:		2.5V
+ --					Bank 5:		2.5V
+ --					Bank 6:		2.5V
+ --					Bank 7:		2.5V
+ --					Bank 8:		2.5V
+ -- GND           : Dedicated ground pin. Dedicated GND pins MUST be connected to GND.
+ --					It can also be used to report unused dedicated pins. The connection
+ --					on the board for unused dedicated pins depends on whether this will
+ --					be used in a future design. One example is device migration. When
+ --					using device migration, refer to the device pin-tables. If it is a
+ --					GND pin in the pin table or if it will not be used in a future design
+ --					for another purpose the it MUST be connected to GND. If it is an unused
+ --					dedicated pin, then it can be connected to a valid signal on the board
+ --					(low, high, or toggling) if that signal is required for a different
+ --					revision of the design.
+ -- GND+          : Unused input pin. It can also be used to report unused dual-purpose pins.
+ --					This pin should be connected to GND. It may also be connected  to a
+ --					valid signal  on the board  (low, high, or toggling)  if that signal
+ --					is required for a different revision of the design.
+ -- GND*          : Unused  I/O  pin. Connect each pin marked GND* directly to GND
+ --           	    or leave it unconnected.
+ -- RESERVED      : Unused I/O pin, which MUST be left unconnected.
+ -- RESERVED_INPUT    : Pin is tri-stated and should be connected to the board.
+ -- RESERVED_INPUT_WITH_WEAK_PULLUP    : Pin is tri-stated with internal weak pull-up resistor.
+ -- RESERVED_INPUT_WITH_BUS_HOLD       : Pin is tri-stated with bus-hold circuitry.
+ -- RESERVED_OUTPUT_DRIVEN_HIGH        : Pin is output driven high.
+ ---------------------------------------------------------------------------------
+
+
+
+ ---------------------------------------------------------------------------------
+ -- Pin directions (input, output or bidir) are based on device operating in user mode.
+ ---------------------------------------------------------------------------------
+
+Quartus II 64-Bit Version 13.1.0 Build 162 10/23/2013 SJ Web Edition
+CHIP  "cache_hierarchy_top"  ASSIGNED TO AN: EP3C25F324C6
+
+Pin Name/Usage               : Location  : Dir.   : I/O Standard      : Voltage : I/O Bank  : User Assignment
+-------------------------------------------------------------------------------------------------------------
+req_pc[2]                    : A1        : input  : 2.5 V             :         : 8         : N              
+req_pc[8]                    : A2        : input  : 2.5 V             :         : 8         : N              
+l1_miss_count[13]            : A3        : output : 2.5 V             :         : 8         : N              
+l2_miss_count[14]            : A4        : output : 2.5 V             :         : 8         : N              
+req_addr[10]                 : A5        : input  : 2.5 V             :         : 8         : N              
+l2_miss_count[7]             : A6        : output : 2.5 V             :         : 8         : N              
+l2_miss_count[1]             : A7        : output : 2.5 V             :         : 8         : N              
+l2_miss_count[29]            : A8        : output : 2.5 V             :         : 8         : N              
+rst                          : A9        : input  : 2.5 V             :         : 8         : N              
+req_pc[21]                   : A10       : input  : 2.5 V             :         : 7         : N              
+l2_miss_count[21]            : A11       : output : 2.5 V             :         : 7         : N              
+l1_miss_count[31]            : A12       : output : 2.5 V             :         : 7         : N              
+l1_miss_count[21]            : A13       : output : 2.5 V             :         : 7         : N              
+l1_miss_count[30]            : A14       : output : 2.5 V             :         : 7         : N              
+l1_miss_count[27]            : A15       : output : 2.5 V             :         : 7         : N              
+l1_miss_count[15]            : A16       : output : 2.5 V             :         : 7         : N              
+req_pc[11]                   : A17       : input  : 2.5 V             :         : 7         : N              
+req_pc[15]                   : A18       : input  : 2.5 V             :         : 7         : N              
+req_pc[4]                    : B1        : input  : 2.5 V             :         : 1         : N              
+req_addr[1]                  : B2        : input  : 2.5 V             :         : 1         : N              
+l1_miss_count[29]            : B3        : output : 2.5 V             :         : 8         : N              
+l1_miss_count[1]             : B4        : output : 2.5 V             :         : 8         : N              
+l2_miss_count[22]            : B5        : output : 2.5 V             :         : 8         : N              
+l2_miss_count[31]            : B6        : output : 2.5 V             :         : 8         : N              
+l2_miss_count[11]            : B7        : output : 2.5 V             :         : 8         : N              
+l2_miss_count[17]            : B8        : output : 2.5 V             :         : 8         : N              
+req_valid                    : B9        : input  : 2.5 V             :         : 8         : N              
+req_pc[22]                   : B10       : input  : 2.5 V             :         : 7         : N              
+l2_miss_count[4]             : B11       : output : 2.5 V             :         : 7         : N              
+l2_miss_count[5]             : B12       : output : 2.5 V             :         : 7         : N              
+l1_miss_count[12]            : B13       : output : 2.5 V             :         : 7         : N              
+l1_miss_count[23]            : B14       : output : 2.5 V             :         : 7         : N              
+l1_miss_count[22]            : B15       : output : 2.5 V             :         : 7         : N              
+l1_miss_count[10]            : B16       : output : 2.5 V             :         : 7         : N              
+req_pc[16]                   : B17       : input  : 2.5 V             :         : 6         : N              
+l1_miss_count[14]            : B18       : output : 2.5 V             :         : 6         : N              
+req_pc[12]                   : C1        : input  : 2.5 V             :         : 1         : N              
+l2_miss_count[18]            : C2        : output : 2.5 V             :         : 1         : N              
+l2_miss_count[16]            : C3        : output : 2.5 V             :         : 1         : N              
+GND                          : C4        : gnd    :                   :         :           :                
+l2_miss_count[12]            : C5        : output : 2.5 V             :         : 8         : N              
+GND                          : C6        : gnd    :                   :         :           :                
+l2_miss_count[2]             : C7        : output : 2.5 V             :         : 8         : N              
+GND                          : C8        : gnd    :                   :         :           :                
+l2_miss_count[25]            : C9        : output : 2.5 V             :         : 8         : N              
+l2_miss_count[30]            : C10       : output : 2.5 V             :         : 7         : N              
+GND                          : C11       : gnd    :                   :         :           :                
+l1_miss_count[20]            : C12       : output : 2.5 V             :         : 7         : N              
+GND                          : C13       : gnd    :                   :         :           :                
+l1_miss_count[9]             : C14       : output : 2.5 V             :         : 7         : N              
+GND                          : C15       : gnd    :                   :         :           :                
+req_pc[7]                    : C16       : input  : 2.5 V             :         : 7         : N              
+l1_miss_count[0]             : C17       : output : 2.5 V             :         : 6         : N              
+l1_miss_count[5]             : C18       : output : 2.5 V             :         : 6         : N              
+~ALTERA_ASDO_DATA1~ / RESERVED_INPUT_WITH_WEAK_PULLUP : D1        : input  : 2.5 V             :         : 1         : N              
+l2_miss_count[6]             : D2        : output : 2.5 V             :         : 1         : N              
+l1_hit_count[5]              : D3        : output : 2.5 V             :         : 1         : N              
+VCCIO8                       : D4        : power  :                   : 2.5V    : 8         :                
+l1_miss_count[25]            : D5        : output : 2.5 V             :         : 8         : N              
+VCCIO8                       : D6        : power  :                   : 2.5V    : 8         :                
+l2_miss_count[15]            : D7        : output : 2.5 V             :         : 8         : N              
+VCCIO8                       : D8        : power  :                   : 2.5V    : 8         :                
+l2_miss_count[13]            : D9        : output : 2.5 V             :         : 8         : N              
+l2_miss_count[0]             : D10       : output : 2.5 V             :         : 7         : N              
+VCCIO7                       : D11       : power  :                   : 2.5V    : 7         :                
+l1_miss_count[6]             : D12       : output : 2.5 V             :         : 7         : N              
+VCCIO7                       : D13       : power  :                   : 2.5V    : 7         :                
+l1_miss_count[3]             : D14       : output : 2.5 V             :         : 7         : N              
+VCCIO7                       : D15       : power  :                   : 2.5V    : 7         :                
+req_pc[17]                   : D16       : input  : 2.5 V             :         : 7         : N              
+RESERVED_INPUT_WITH_WEAK_PULLUP : D17       :        :                   :         : 6         :                
+req_pc[20]                   : D18       : input  : 2.5 V             :         : 6         : N              
+l1_miss_count[26]            : E1        : output : 2.5 V             :         : 1         : N              
+~ALTERA_FLASH_nCE_nCSO~ / RESERVED_INPUT_WITH_WEAK_PULLUP : E2        : input  : 2.5 V             :         : 1         : N              
+GND                          : E3        : gnd    :                   :         :           :                
+VCCA3                        : E4        : power  :                   : 2.5V    :           :                
+GNDA3                        : E5        : gnd    :                   :         :           :                
+l2_miss_count[19]            : E6        : output : 2.5 V             :         : 8         : N              
+l2_miss_count[26]            : E7        : output : 2.5 V             :         : 8         : N              
+l2_miss_count[24]            : E8        : output : 2.5 V             :         : 8         : N              
+l2_miss_count[10]            : E9        : output : 2.5 V             :         : 8         : N              
+l2_miss_count[3]             : E10       : output : 2.5 V             :         : 8         : N              
+l2_miss_count[28]            : E11       : output : 2.5 V             :         : 7         : N              
+l1_miss_count[2]             : E12       : output : 2.5 V             :         : 7         : N              
+l1_miss_count[8]             : E13       : output : 2.5 V             :         : 7         : N              
+l1_miss_count[11]            : E14       : output : 2.5 V             :         : 7         : N              
+VCCD_PLL2                    : E15       : power  :                   : 1.2V    :           :                
+GND                          : E16       : gnd    :                   :         :           :                
+l2_hit_count[12]             : E17       : output : 2.5 V             :         : 6         : N              
+~ALTERA_nCEO~ / RESERVED_OUTPUT_OPEN_DRAIN : E18       : output : 2.5 V             :         : 6         : N              
+GND+                         : F1        :        :                   :         : 1         :                
+clk                          : F2        : input  : 2.5 V             :         : 1         : N              
+l2_miss_count[23]            : F3        : output : 2.5 V             :         : 1         : N              
+VCCIO1                       : F4        : power  :                   : 2.5V    : 1         :                
+VCCD_PLL3                    : F5        : power  :                   : 1.2V    :           :                
+l1_miss_count[18]            : F6        : output : 2.5 V             :         : 8         : N              
+l2_miss_count[9]             : F7        : output : 2.5 V             :         : 8         : N              
+l2_miss_count[20]            : F8        : output : 2.5 V             :         : 8         : N              
+l2_miss_count[8]             : F9        : output : 2.5 V             :         : 8         : N              
+l1_miss_count[28]            : F10       : output : 2.5 V             :         : 7         : N              
+l1_miss_count[4]             : F11       : output : 2.5 V             :         : 7         : N              
+l1_miss_count[17]            : F12       : output : 2.5 V             :         : 7         : N              
+req_pc[14]                   : F13       : input  : 2.5 V             :         : 7         : N              
+VCCA2                        : F14       : power  :                   : 2.5V    :           :                
+GNDA2                        : F15       : gnd    :                   :         :           :                
+VCCIO6                       : F16       : power  :                   : 2.5V    : 6         :                
+req_pc[31]                   : F17       : input  : 2.5 V             :         : 6         : N              
+req_pc[30]                   : F18       : input  : 2.5 V             :         : 6         : N              
+l1_hit_count[7]              : G1        : output : 2.5 V             :         : 1         : N              
+l1_hit_count[15]             : G2        : output : 2.5 V             :         : 1         : N              
+GND                          : G3        : gnd    :                   :         :           :                
+VCCIO1                       : G4        : power  :                   : 2.5V    : 1         :                
+nSTATUS                      : G5        :        :                   :         : 1         :                
+l2_miss_count[27]            : G6        : output : 2.5 V             :         : 8         : N              
+VCCINT                       : G7        : power  :                   : 1.2V    :           :                
+VCCINT                       : G8        : power  :                   : 1.2V    :           :                
+GND                          : G9        : gnd    :                   :         :           :                
+VCCINT                       : G10       : power  :                   : 1.2V    :           :                
+VCCINT                       : G11       : power  :                   : 1.2V    :           :                
+VCCINT                       : G12       : power  :                   : 1.2V    :           :                
+req_pc[10]                   : G13       : input  : 2.5 V             :         : 7         : N              
+l1_miss_count[7]             : G14       : output : 2.5 V             :         : 6         : N              
+VCCIO6                       : G15       : power  :                   : 2.5V    : 6         :                
+GND                          : G16       : gnd    :                   :         :           :                
+l2_hit_count[4]              : G17       : output : 2.5 V             :         : 6         : N              
+l2_hit_count[9]              : G18       : output : 2.5 V             :         : 6         : N              
+l1_hit_count[10]             : H1        : output : 2.5 V             :         : 1         : N              
+l1_hit_count[6]              : H2        : output : 2.5 V             :         : 1         : N              
+~ALTERA_DATA0~ / RESERVED_INPUT_WITH_WEAK_PULLUP : H3        : input  : 2.5 V             :         : 1         : N              
+~ALTERA_DCLK~                : H4        : output : 2.5 V             :         : 1         : N              
+nCONFIG                      : H5        :        :                   :         : 1         :                
+l1_hit_count[11]             : H6        : output : 2.5 V             :         : 1         : N              
+VCCINT                       : H7        : power  :                   : 1.2V    :           :                
+GND                          : H8        : gnd    :                   :         :           :                
+GND                          : H9        : gnd    :                   :         :           :                
+GND                          : H10       : gnd    :                   :         :           :                
+GND                          : H11       : gnd    :                   :         :           :                
+VCCINT                       : H12       : power  :                   : 1.2V    :           :                
+l1_miss_count[16]            : H13       : output : 2.5 V             :         : 6         : N              
+l1_miss_count[24]            : H14       : output : 2.5 V             :         : 6         : N              
+l1_miss_count[19]            : H15       : output : 2.5 V             :         : 6         : N              
+l2_hit_count[0]              : H16       : output : 2.5 V             :         : 6         : N              
+req_addr[9]                  : H17       : input  : 2.5 V             :         : 6         : N              
+l2_hit_count[7]              : H18       : output : 2.5 V             :         : 6         : N              
+TCK                          : J1        : input  :                   :         : 1         :                
+TMS                          : J2        : input  :                   :         : 1         :                
+GND                          : J3        : gnd    :                   :         :           :                
+VCCIO1                       : J4        : power  :                   : 2.5V    : 1         :                
+TDO                          : J5        : output :                   :         : 1         :                
+TDI                          : J6        : input  :                   :         : 1         :                
+VCCINT                       : J7        : power  :                   : 1.2V    :           :                
+GND                          : J8        : gnd    :                   :         :           :                
+GND                          : J9        : gnd    :                   :         :           :                
+GND                          : J10       : gnd    :                   :         :           :                
+GND                          : J11       : gnd    :                   :         :           :                
+VCCINT                       : J12       : power  :                   : 1.2V    :           :                
+req_addr[8]                  : J13       : input  : 2.5 V             :         : 6         : N              
+MSEL3                        : J14       :        :                   :         : 6         :                
+VCCIO6                       : J15       : power  :                   : 2.5V    : 6         :                
+GND                          : J16       : gnd    :                   :         :           :                
+MSEL2                        : J17       :        :                   :         : 6         :                
+MSEL1                        : J18       :        :                   :         : 6         :                
+l1_hit_count[0]              : K1        : output : 2.5 V             :         : 2         : N              
+l1_hit_count[9]              : K2        : output : 2.5 V             :         : 2         : N              
+GND                          : K3        : gnd    :                   :         :           :                
+VCCIO2                       : K4        : power  :                   : 2.5V    : 2         :                
+l1_hit_count[4]              : K5        : output : 2.5 V             :         : 2         : N              
+nCE                          : K6        :        :                   :         : 1         :                
+VCCINT                       : K7        : power  :                   : 1.2V    :           :                
+GND                          : K8        : gnd    :                   :         :           :                
+GND                          : K9        : gnd    :                   :         :           :                
+GND                          : K10       : gnd    :                   :         :           :                
+GND                          : K11       : gnd    :                   :         :           :                
+VCCINT                       : K12       : power  :                   : 1.2V    :           :                
+MSEL0                        : K13       :        :                   :         : 6         :                
+CONF_DONE                    : K14       :        :                   :         : 6         :                
+VCCIO5                       : K15       : power  :                   : 2.5V    : 5         :                
+GND                          : K16       : gnd    :                   :         :           :                
+l2_hit_count[3]              : K17       : output : 2.5 V             :         : 5         : N              
+l2_hit_count[2]              : K18       : output : 2.5 V             :         : 5         : N              
+l1_hit_count[13]             : L1        : output : 2.5 V             :         : 2         : N              
+l1_hit_count[3]              : L2        : output : 2.5 V             :         : 2         : N              
+l1_hit_count[2]              : L3        : output : 2.5 V             :         : 2         : N              
+l1_hit_count[12]             : L4        : output : 2.5 V             :         : 2         : N              
+l1_hit_count[14]             : L5        : output : 2.5 V             :         : 2         : N              
+l1_hit_count[8]              : L6        : output : 2.5 V             :         : 2         : N              
+VCCINT                       : L7        : power  :                   : 1.2V    :           :                
+GND                          : L8        : gnd    :                   :         :           :                
+GND                          : L9        : gnd    :                   :         :           :                
+GND                          : L10       : gnd    :                   :         :           :                
+GND                          : L11       : gnd    :                   :         :           :                
+VCCINT                       : L12       : power  :                   : 1.2V    :           :                
+l2_hit_count[30]             : L13       : output : 2.5 V             :         : 5         : N              
+l2_hit_count[29]             : L14       : output : 2.5 V             :         : 5         : N              
+l2_hit_count[19]             : L15       : output : 2.5 V             :         : 5         : N              
+l2_hit_count[5]              : L16       : output : 2.5 V             :         : 5         : N              
+l2_hit_count[24]             : L17       : output : 2.5 V             :         : 5         : N              
+l2_hit_count[6]              : L18       : output : 2.5 V             :         : 5         : N              
+l1_hit_count[23]             : M1        : output : 2.5 V             :         : 2         : N              
+l1_hit_count[24]             : M2        : output : 2.5 V             :         : 2         : N              
+l1_hit_count[21]             : M3        : output : 2.5 V             :         : 2         : N              
+VCCIO2                       : M4        : power  :                   : 2.5V    : 2         :                
+l1_hit_count[1]              : M5        : output : 2.5 V             :         : 2         : N              
+req_addr[2]                  : M6        : input  : 2.5 V             :         : 3         : N              
+VCCINT                       : M7        : power  :                   : 1.2V    :           :                
+VCCINT                       : M8        : power  :                   : 1.2V    :           :                
+VCCINT                       : M9        : power  :                   : 1.2V    :           :                
+GND                          : M10       : gnd    :                   :         :           :                
+VCCINT                       : M11       : power  :                   : 1.2V    :           :                
+VCCINT                       : M12       : power  :                   : 1.2V    :           :                
+l2_hit_count[18]             : M13       : output : 2.5 V             :         : 4         : N              
+l2_hit_count[28]             : M14       : output : 2.5 V             :         : 5         : N              
+VCCIO5                       : M15       : power  :                   : 2.5V    : 5         :                
+GND                          : M16       : gnd    :                   :         :           :                
+l2_hit_count[10]             : M17       : output : 2.5 V             :         : 5         : N              
+l2_hit_count[16]             : M18       : output : 2.5 V             :         : 5         : N              
+GND+                         : N1        :        :                   :         : 2         :                
+GND+                         : N2        :        :                   :         : 2         :                
+GND                          : N3        : gnd    :                   :         :           :                
+VCCIO2                       : N4        : power  :                   : 2.5V    : 2         :                
+VCCA1                        : N5        : power  :                   : 2.5V    :           :                
+req_pc[5]                    : N6        : input  : 2.5 V             :         : 3         : N              
+req_pc[13]                   : N7        : input  : 2.5 V             :         : 3         : N              
+req_pc[19]                   : N8        : input  : 2.5 V             :         : 3         : N              
+req_pc[18]                   : N9        : input  : 2.5 V             :         : 3         : N              
+req_addr[16]                 : N10       : input  : 2.5 V             :         : 4         : N              
+req_addr[12]                 : N11       : input  : 2.5 V             :         : 4         : N              
+l2_hit_count[11]             : N12       : output : 2.5 V             :         : 4         : N              
+req_pc[6]                    : N13       : input  : 2.5 V             :         : 4         : N              
+VCCA4                        : N14       : power  :                   : 2.5V    :           :                
+l2_hit_count[21]             : N15       : output : 2.5 V             :         : 5         : N              
+l2_hit_count[8]              : N16       : output : 2.5 V             :         : 5         : N              
+req_pc[29]                   : N17       : input  : 2.5 V             :         : 5         : N              
+req_pc[28]                   : N18       : input  : 2.5 V             :         : 5         : N              
+l1_hit_count[20]             : P1        : output : 2.5 V             :         : 2         : N              
+l1_hit_count[16]             : P2        : output : 2.5 V             :         : 2         : N              
+GND                          : P3        : gnd    :                   :         :           :                
+VCCD_PLL1                    : P4        : power  :                   : 1.2V    :           :                
+GNDA1                        : P5        : gnd    :                   :         :           :                
+l1_hit_count[25]             : P6        : output : 2.5 V             :         : 3         : N              
+req_pc[0]                    : P7        : input  : 2.5 V             :         : 3         : N              
+req_addr[31]                 : P8        : input  : 2.5 V             :         : 3         : N              
+state_debug[1]               : P9        : output : 2.5 V             :         : 3         : N              
+resp_l1_hit                  : P10       : output : 2.5 V             :         : 4         : N              
+req_addr[15]                 : P11       : input  : 2.5 V             :         : 4         : N              
+req_addr[23]                 : P12       : input  : 2.5 V             :         : 4         : N              
+l2_hit_count[27]             : P13       : output : 2.5 V             :         : 4         : N              
+GNDA4                        : P14       : gnd    :                   :         :           :                
+VCCD_PLL4                    : P15       : power  :                   : 1.2V    :           :                
+GND                          : P16       : gnd    :                   :         :           :                
+l2_hit_count[1]              : P17       : output : 2.5 V             :         : 5         : N              
+l2_hit_count[15]             : P18       : output : 2.5 V             :         : 5         : N              
+l1_hit_count[31]             : R1        : output : 2.5 V             :         : 2         : N              
+l1_hit_count[19]             : R2        : output : 2.5 V             :         : 2         : N              
+l1_hit_count[27]             : R3        : output : 2.5 V             :         : 2         : N              
+l1_hit_count[26]             : R4        : output : 2.5 V             :         : 2         : N              
+l1_hit_count[29]             : R5        : output : 2.5 V             :         : 2         : N              
+VCCIO3                       : R6        : power  :                   : 2.5V    : 3         :                
+VCCIO3                       : R7        : power  :                   : 2.5V    : 3         :                
+req_addr[25]                 : R8        : input  : 2.5 V             :         : 3         : N              
+VCCIO3                       : R9        : power  :                   : 2.5V    : 3         :                
+VCCIO4                       : R10       : power  :                   : 2.5V    : 4         :                
+req_addr[14]                 : R11       : input  : 2.5 V             :         : 4         : N              
+VCCIO4                       : R12       : power  :                   : 2.5V    : 4         :                
+req_pc[9]                    : R13       : input  : 2.5 V             :         : 4         : N              
+VCCIO4                       : R14       : power  :                   : 2.5V    : 4         :                
+VCCIO5                       : R15       : power  :                   : 2.5V    : 5         :                
+l2_hit_count[25]             : R16       : output : 2.5 V             :         : 5         : N              
+req_addr[29]                 : R17       : input  : 2.5 V             :         : 5         : N              
+l2_hit_count[14]             : R18       : output : 2.5 V             :         : 5         : N              
+l1_hit_count[30]             : T1        : output : 2.5 V             :         : 2         : N              
+l1_hit_count[28]             : T2        : output : 2.5 V             :         : 2         : N              
+l1_hit_count[22]             : T3        : output : 2.5 V             :         : 2         : N              
+l1_hit_count[17]             : T4        : output : 2.5 V             :         : 3         : N              
+GND                          : T5        : gnd    :                   :         :           :                
+RESERVED_INPUT_WITH_WEAK_PULLUP : T6        :        :                   :         : 3         :                
+GND                          : T7        : gnd    :                   :         :           :                
+req_addr[24]                 : T8        : input  : 2.5 V             :         : 3         : N              
+GND                          : T9        : gnd    :                   :         :           :                
+GND                          : T10       : gnd    :                   :         :           :                
+req_addr[28]                 : T11       : input  : 2.5 V             :         : 4         : N              
+GND                          : T12       : gnd    :                   :         :           :                
+l2_hit_count[13]             : T13       : output : 2.5 V             :         : 4         : N              
+l2_hit_count[17]             : T14       : output : 2.5 V             :         : 4         : N              
+GND                          : T15       : gnd    :                   :         :           :                
+l2_hit_count[22]             : T16       : output : 2.5 V             :         : 5         : N              
+req_addr[30]                 : T17       : input  : 2.5 V             :         : 5         : N              
+l2_hit_count[20]             : T18       : output : 2.5 V             :         : 5         : N              
+RESERVED_INPUT_WITH_WEAK_PULLUP : U1        :        :                   :         : 3         :                
+req_addr[4]                  : U2        : input  : 2.5 V             :         : 3         : N              
+req_addr[0]                  : U3        : input  : 2.5 V             :         : 3         : N              
+req_pc[23]                   : U4        : input  : 2.5 V             :         : 3         : N              
+resp_l1_miss                 : U5        : output : 2.5 V             :         : 3         : N              
+state_debug[2]               : U6        : output : 2.5 V             :         : 3         : N              
+state_debug[0]               : U7        : output : 2.5 V             :         : 3         : N              
+busy                         : U8        : output : 2.5 V             :         : 3         : N              
+req_pc[24]                   : U9        : input  : 2.5 V             :         : 3         : N              
+req_pc[26]                   : U10       : input  : 2.5 V             :         : 4         : N              
+req_addr[6]                  : U11       : input  : 2.5 V             :         : 4         : N              
+req_addr[7]                  : U12       : input  : 2.5 V             :         : 4         : N              
+req_addr[5]                  : U13       : input  : 2.5 V             :         : 4         : N              
+req_addr[19]                 : U14       : input  : 2.5 V             :         : 4         : N              
+req_addr[11]                 : U15       : input  : 2.5 V             :         : 4         : N              
+l2_hit_count[31]             : U16       : output : 2.5 V             :         : 4         : N              
+req_addr[17]                 : U17       : input  : 2.5 V             :         : 4         : N              
+l2_hit_count[26]             : U18       : output : 2.5 V             :         : 4         : N              
+req_pc[1]                    : V1        : input  : 2.5 V             :         : 3         : N              
+l1_hit_count[18]             : V2        : output : 2.5 V             :         : 3         : N              
+req_addr[3]                  : V3        : input  : 2.5 V             :         : 3         : N              
+req_pc[3]                    : V4        : input  : 2.5 V             :         : 3         : N              
+resp_l2_access               : V5        : output : 2.5 V             :         : 3         : N              
+req_addr[26]                 : V6        : input  : 2.5 V             :         : 3         : N              
+done                         : V7        : output : 2.5 V             :         : 3         : N              
+req_addr[22]                 : V8        : input  : 2.5 V             :         : 3         : N              
+req_pc[25]                   : V9        : input  : 2.5 V             :         : 3         : N              
+req_pc[27]                   : V10       : input  : 2.5 V             :         : 4         : N              
+resp_l2_miss                 : V11       : output : 2.5 V             :         : 4         : N              
+req_addr[21]                 : V12       : input  : 2.5 V             :         : 4         : N              
+resp_l2_hit                  : V13       : output : 2.5 V             :         : 4         : N              
+req_addr[20]                 : V14       : input  : 2.5 V             :         : 4         : N              
+req_addr[13]                 : V15       : input  : 2.5 V             :         : 4         : N              
+l2_hit_count[23]             : V16       : output : 2.5 V             :         : 4         : N              
+req_addr[27]                 : V17       : input  : 2.5 V             :         : 4         : N              
+req_addr[18]                 : V18       : input  : 2.5 V             :         : 4         : N              

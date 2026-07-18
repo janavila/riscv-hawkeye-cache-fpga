@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<LOG_ROOT>
+	<PROJECT NAME="cache_hierarchy_top">
+		<CBX_INST_ENTRY INSTANCE_NAME="|cache_hierarchy_top|cache_l2:u_l2|altsyncram:l2_line_ram" CBX_FILE_NAME="altsyncram_gg91.tdf"/>
+	</PROJECT>
+</LOG_ROOT>

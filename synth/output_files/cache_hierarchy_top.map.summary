@@ -1,0 +1,14 @@
+Analysis & Synthesis Status : Successful - Wed Jul 15 21:16:59 2026
+Quartus II 64-Bit Version : 13.1.0 Build 162 10/23/2013 SJ Web Edition
+Revision Name : cache_hierarchy_top
+Top-level Entity Name : cache_hierarchy_top
+Family : Cyclone III
+Total logic elements : 18,001
+    Total combinational functions : 13,837
+    Dedicated logic registers : 6,542
+Total registers : 6542
+Total pins : 205
+Total virtual pins : 0
+Total memory bits : 55,296
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 0

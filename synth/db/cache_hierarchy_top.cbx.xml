@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<LOG_ROOT>
+	<PROJECT NAME="cache_hierarchy_top">
+		<CBX_INST_ENTRY INSTANCE_NAME="|cache_hierarchy_top|hawkeye_l2_policy:u_policy|hawkeye_top:hawkeye_core|hawkeye_predictor:predictor_inst|altsyncram:ram_predict_rtl_0" CBX_FILE_NAME="altsyncram_91h1.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|cache_hierarchy_top|hawkeye_l2_policy:u_policy|hawkeye_top:hawkeye_core|sampler:sampler_inst|altsyncram:signature_ram" CBX_FILE_NAME="altsyncram_6d91.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|cache_hierarchy_top|hawkeye_l2_policy:u_policy|hawkeye_top:hawkeye_core|sampler:sampler_inst|altsyncram:valid_ram" CBX_FILE_NAME="altsyncram_2a91.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|cache_hierarchy_top|cache_l2:u_l2|altsyncram:l2_line_ram" CBX_FILE_NAME="altsyncram_gg91.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|cache_hierarchy_top|hawkeye_l2_policy:u_policy|hawkeye_top:hawkeye_core|hawkeye_predictor:predictor_inst|altsyncram:ram_train_rtl_0" CBX_FILE_NAME="altsyncram_h1h1.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|cache_hierarchy_top|hawkeye_l2_policy:u_policy|hawkeye_top:hawkeye_core|sampler:sampler_inst|altsyncram:lru_ram" CBX_FILE_NAME="altsyncram_sc91.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|cache_hierarchy_top|hawkeye_l2_policy:u_policy|hawkeye_top:hawkeye_core|sampler:sampler_inst|altsyncram:pc_ram" CBX_FILE_NAME="altsyncram_2g91.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|cache_hierarchy_top|hawkeye_l2_policy:u_policy|hawkeye_top:hawkeye_core|sampler:sampler_inst|altsyncram:time_ram" CBX_FILE_NAME="altsyncram_cg91.tdf"/>
+	</PROJECT>
+</LOG_ROOT>

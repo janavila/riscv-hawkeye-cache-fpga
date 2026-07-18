@@ -1,0 +1,19 @@
+
+State Machine - |cache_hierarchy_top|state
+Name state.S_DONE state.S_L1_FILL state.S_L2_WAIT state.S_L2_REQ state.S_L1_LOOKUP state.S_IDLE 
+state.S_IDLE 0 0 0 0 0 0 
+state.S_L1_LOOKUP 0 0 0 0 1 1 
+state.S_L2_REQ 0 0 0 1 0 1 
+state.S_L2_WAIT 0 0 1 0 0 1 
+state.S_L1_FILL 0 1 0 0 0 1 
+state.S_DONE 1 0 0 0 0 1 
+
+State Machine - |cache_hierarchy_top|cache_l2:u_l2|estado
+Name estado.FINISH estado.ALLOCATE estado.WAIT_VICTIM estado.LOOKUP estado.READ estado.IDLE estado.INIT 
+estado.INIT 0 0 0 0 0 0 0 
+estado.IDLE 0 0 0 0 0 1 1 
+estado.READ 0 0 0 0 1 0 1 
+estado.LOOKUP 0 0 0 1 0 0 1 
+estado.WAIT_VICTIM 0 0 1 0 0 0 1 
+estado.ALLOCATE 0 1 0 0 0 0 1 
+estado.FINISH 1 0 0 0 0 0 1 

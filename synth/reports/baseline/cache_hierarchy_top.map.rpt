@@ -1,0 +1,794 @@
+Analysis & Synthesis report for cache_hierarchy_top
+Wed Jul 15 21:29:12 2026
+Quartus II 64-Bit Version 13.1.0 Build 162 10/23/2013 SJ Web Edition
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Analysis & Synthesis Summary
+  3. Analysis & Synthesis Settings
+  4. Parallel Compilation
+  5. Analysis & Synthesis Source Files Read
+  6. Analysis & Synthesis Resource Usage Summary
+  7. Analysis & Synthesis Resource Utilization by Entity
+  8. Analysis & Synthesis RAM Summary
+  9. State Machine - |cache_hierarchy_top|state
+ 10. State Machine - |cache_hierarchy_top|cache_l2:u_l2|estado
+ 11. Registers Removed During Synthesis
+ 12. General Register Statistics
+ 13. Multiplexer Restructuring Statistics (Restructuring Performed)
+ 14. Source assignments for cache_l2:u_l2|altsyncram:l2_line_ram|altsyncram_gg91:auto_generated
+ 15. Parameter Settings for User Entity Instance: Top-level Entity: |cache_hierarchy_top
+ 16. Parameter Settings for User Entity Instance: cache_l1:u_l1
+ 17. Parameter Settings for User Entity Instance: cache_l2:u_l2
+ 18. Parameter Settings for User Entity Instance: cache_l2:u_l2|altsyncram:l2_line_ram
+ 19. Parameter Settings for User Entity Instance: hawkeye_l2_policy_dummy:u_policy
+ 20. altsyncram Parameter Settings by Entity Instance
+ 21. Port Connectivity Checks: "cache_l1:u_l1"
+ 22. Elapsed Time Per Partition
+ 23. Analysis & Synthesis Messages
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 1991-2013 Altera Corporation
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, Altera MegaCore Function License 
+Agreement, or other applicable license agreement, including, 
+without limitation, that your use is for the sole purpose of 
+programming logic devices manufactured by Altera and sold by 
+Altera or its authorized distributors.  Please refer to the 
+applicable agreement for further details.
+
+
+
++---------------------------------------------------------------------------------+
+; Analysis & Synthesis Summary                                                    ;
++------------------------------------+--------------------------------------------+
+; Analysis & Synthesis Status        ; Successful - Wed Jul 15 21:29:12 2026      ;
+; Quartus II 64-Bit Version          ; 13.1.0 Build 162 10/23/2013 SJ Web Edition ;
+; Revision Name                      ; cache_hierarchy_top                        ;
+; Top-level Entity Name              ; cache_hierarchy_top                        ;
+; Family                             ; Cyclone III                                ;
+; Total logic elements               ; 5,851                                      ;
+;     Total combinational functions  ; 3,158                                      ;
+;     Dedicated logic registers      ; 3,168                                      ;
+; Total registers                    ; 3168                                       ;
+; Total pins                         ; 205                                        ;
+; Total virtual pins                 ; 0                                          ;
+; Total memory bits                  ; 10,752                                     ;
+; Embedded Multiplier 9-bit elements ; 0                                          ;
+; Total PLLs                         ; 0                                          ;
++------------------------------------+--------------------------------------------+
+
+
++------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Settings                                                                                          ;
++----------------------------------------------------------------------------+---------------------+---------------------+
+; Option                                                                     ; Setting             ; Default Value       ;
++----------------------------------------------------------------------------+---------------------+---------------------+
+; Device                                                                     ; EP3C25F324C6        ;                     ;
+; Top-level entity name                                                      ; cache_hierarchy_top ; cache_hierarchy_top ;
+; Family name                                                                ; Cyclone III         ; Cyclone IV GX       ;
+; Use smart compilation                                                      ; Off                 ; Off                 ;
+; Enable parallel Assembler and TimeQuest Timing Analyzer during compilation ; On                  ; On                  ;
+; Enable compact report table                                                ; Off                 ; Off                 ;
+; Restructure Multiplexers                                                   ; Auto                ; Auto                ;
+; Create Debugging Nodes for IP Cores                                        ; Off                 ; Off                 ;
+; Preserve fewer node names                                                  ; On                  ; On                  ;
+; Disable OpenCore Plus hardware evaluation                                  ; Off                 ; Off                 ;
+; Verilog Version                                                            ; Verilog_2001        ; Verilog_2001        ;
+; VHDL Version                                                               ; VHDL_1993           ; VHDL_1993           ;
+; State Machine Processing                                                   ; Auto                ; Auto                ;
+; Safe State Machine                                                         ; Off                 ; Off                 ;
+; Extract Verilog State Machines                                             ; On                  ; On                  ;
+; Extract VHDL State Machines                                                ; On                  ; On                  ;
+; Ignore Verilog initial constructs                                          ; Off                 ; Off                 ;
+; Iteration limit for constant Verilog loops                                 ; 5000                ; 5000                ;
+; Iteration limit for non-constant Verilog loops                             ; 250                 ; 250                 ;
+; Add Pass-Through Logic to Inferred RAMs                                    ; On                  ; On                  ;
+; Infer RAMs from Raw Logic                                                  ; On                  ; On                  ;
+; Parallel Synthesis                                                         ; On                  ; On                  ;
+; DSP Block Balancing                                                        ; Auto                ; Auto                ;
+; NOT Gate Push-Back                                                         ; On                  ; On                  ;
+; Power-Up Don't Care                                                        ; On                  ; On                  ;
+; Remove Redundant Logic Cells                                               ; Off                 ; Off                 ;
+; Remove Duplicate Registers                                                 ; On                  ; On                  ;
+; Ignore CARRY Buffers                                                       ; Off                 ; Off                 ;
+; Ignore CASCADE Buffers                                                     ; Off                 ; Off                 ;
+; Ignore GLOBAL Buffers                                                      ; Off                 ; Off                 ;
+; Ignore ROW GLOBAL Buffers                                                  ; Off                 ; Off                 ;
+; Ignore LCELL Buffers                                                       ; Off                 ; Off                 ;
+; Ignore SOFT Buffers                                                        ; On                  ; On                  ;
+; Limit AHDL Integers to 32 Bits                                             ; Off                 ; Off                 ;
+; Optimization Technique                                                     ; Balanced            ; Balanced            ;
+; Carry Chain Length                                                         ; 70                  ; 70                  ;
+; Auto Carry Chains                                                          ; On                  ; On                  ;
+; Auto Open-Drain Pins                                                       ; On                  ; On                  ;
+; Perform WYSIWYG Primitive Resynthesis                                      ; Off                 ; Off                 ;
+; Auto ROM Replacement                                                       ; On                  ; On                  ;
+; Auto RAM Replacement                                                       ; On                  ; On                  ;
+; Auto DSP Block Replacement                                                 ; On                  ; On                  ;
+; Auto Shift Register Replacement                                            ; Auto                ; Auto                ;
+; Allow Shift Register Merging across Hierarchies                            ; Auto                ; Auto                ;
+; Auto Clock Enable Replacement                                              ; On                  ; On                  ;
+; Strict RAM Replacement                                                     ; Off                 ; Off                 ;
+; Allow Synchronous Control Signals                                          ; On                  ; On                  ;
+; Force Use of Synchronous Clear Signals                                     ; Off                 ; Off                 ;
+; Auto RAM Block Balancing                                                   ; On                  ; On                  ;
+; Auto RAM to Logic Cell Conversion                                          ; Off                 ; Off                 ;
+; Auto Resource Sharing                                                      ; Off                 ; Off                 ;
+; Allow Any RAM Size For Recognition                                         ; Off                 ; Off                 ;
+; Allow Any ROM Size For Recognition                                         ; Off                 ; Off                 ;
+; Allow Any Shift Register Size For Recognition                              ; Off                 ; Off                 ;
+; Use LogicLock Constraints during Resource Balancing                        ; On                  ; On                  ;
+; Ignore translate_off and synthesis_off directives                          ; Off                 ; Off                 ;
+; Timing-Driven Synthesis                                                    ; On                  ; On                  ;
+; Report Parameter Settings                                                  ; On                  ; On                  ;
+; Report Source Assignments                                                  ; On                  ; On                  ;
+; Report Connectivity Checks                                                 ; On                  ; On                  ;
+; Ignore Maximum Fan-Out Assignments                                         ; Off                 ; Off                 ;
+; Synchronization Register Chain Length                                      ; 2                   ; 2                   ;
+; PowerPlay Power Optimization                                               ; Normal compilation  ; Normal compilation  ;
+; HDL message level                                                          ; Level2              ; Level2              ;
+; Suppress Register Optimization Related Messages                            ; Off                 ; Off                 ;
+; Number of Removed Registers Reported in Synthesis Report                   ; 5000                ; 5000                ;
+; Number of Swept Nodes Reported in Synthesis Report                         ; 5000                ; 5000                ;
+; Number of Inverted Registers Reported in Synthesis Report                  ; 100                 ; 100                 ;
+; Clock MUX Protection                                                       ; On                  ; On                  ;
+; Auto Gated Clock Conversion                                                ; Off                 ; Off                 ;
+; Block Design Naming                                                        ; Auto                ; Auto                ;
+; SDC constraint protection                                                  ; Off                 ; Off                 ;
+; Synthesis Effort                                                           ; Auto                ; Auto                ;
+; Shift Register Replacement - Allow Asynchronous Clear Signal               ; On                  ; On                  ;
+; Pre-Mapping Resynthesis Optimization                                       ; Off                 ; Off                 ;
+; Analysis & Synthesis Message Level                                         ; Medium              ; Medium              ;
+; Disable Register Merging Across Hierarchies                                ; Auto                ; Auto                ;
+; Resource Aware Inference For Block RAM                                     ; On                  ; On                  ;
+; Synthesis Seed                                                             ; 1                   ; 1                   ;
++----------------------------------------------------------------------------+---------------------+---------------------+
+
+
+Parallel compilation was disabled, but you have multiple processors available. Enable parallel compilation to reduce compilation time.
++-------------------------------------+
+; Parallel Compilation                ;
++----------------------------+--------+
+; Processors                 ; Number ;
++----------------------------+--------+
+; Number detected on machine ; 4      ;
+; Maximum allowed            ; 1      ;
++----------------------------+--------+
+
+
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Source Files Read                                                                                                                                                                                 ;
++---------------------------------------------+-----------------+------------------------------+---------------------------------------------------------------------------------------------------------------+---------+
+; File Name with User-Entered Path            ; Used in Netlist ; File Type                    ; File Name with Absolute Path                                                                                  ; Library ;
++---------------------------------------------+-----------------+------------------------------+---------------------------------------------------------------------------------------------------------------+---------+
+; cache_hierarchy_top_baseline.v              ; yes             ; User Verilog HDL File        ; C:/Users/Tesouraria/Desktop/PI IV/riscv-hawkeye-cache-fpga-main/synth_baseline/cache_hierarchy_top_baseline.v ;         ;
+; ../../rtl/hawkeye/hawkeye_l2_policy_dummy.v ; yes             ; User Verilog HDL File        ; C:/Users/Tesouraria/Desktop/PI IV/riscv-hawkeye-cache-fpga-main/rtl/hawkeye/hawkeye_l2_policy_dummy.v         ;         ;
+; ../rtl/cache/cache_l2.v                     ; yes             ; User Verilog HDL File        ; C:/Users/Tesouraria/Desktop/PI IV/riscv-hawkeye-cache-fpga-main/rtl/cache/cache_l2.v                          ;         ;
+; ../rtl/cache/cache_l1.v                     ; yes             ; User Verilog HDL File        ; C:/Users/Tesouraria/Desktop/PI IV/riscv-hawkeye-cache-fpga-main/rtl/cache/cache_l1.v                          ;         ;
+; altsyncram.tdf                              ; yes             ; Megafunction                 ; c:/altera/13.1/quartus/libraries/megafunctions/altsyncram.tdf                                                 ;         ;
+; stratix_ram_block.inc                       ; yes             ; Megafunction                 ; c:/altera/13.1/quartus/libraries/megafunctions/stratix_ram_block.inc                                          ;         ;
+; lpm_mux.inc                                 ; yes             ; Megafunction                 ; c:/altera/13.1/quartus/libraries/megafunctions/lpm_mux.inc                                                    ;         ;
+; lpm_decode.inc                              ; yes             ; Megafunction                 ; c:/altera/13.1/quartus/libraries/megafunctions/lpm_decode.inc                                                 ;         ;
+; aglobal131.inc                              ; yes             ; Megafunction                 ; c:/altera/13.1/quartus/libraries/megafunctions/aglobal131.inc                                                 ;         ;
+; a_rdenreg.inc                               ; yes             ; Megafunction                 ; c:/altera/13.1/quartus/libraries/megafunctions/a_rdenreg.inc                                                  ;         ;
+; altrom.inc                                  ; yes             ; Megafunction                 ; c:/altera/13.1/quartus/libraries/megafunctions/altrom.inc                                                     ;         ;
+; altram.inc                                  ; yes             ; Megafunction                 ; c:/altera/13.1/quartus/libraries/megafunctions/altram.inc                                                     ;         ;
+; altdpram.inc                                ; yes             ; Megafunction                 ; c:/altera/13.1/quartus/libraries/megafunctions/altdpram.inc                                                   ;         ;
+; db/altsyncram_gg91.tdf                      ; yes             ; Auto-Generated Megafunction  ; C:/Users/Tesouraria/Desktop/PI IV/riscv-hawkeye-cache-fpga-main/synth_baseline/db/altsyncram_gg91.tdf         ;         ;
++---------------------------------------------+-----------------+------------------------------+---------------------------------------------------------------------------------------------------------------+---------+
+
+
++---------------------------------------------------------+
+; Analysis & Synthesis Resource Usage Summary             ;
++---------------------------------------------+-----------+
+; Resource                                    ; Usage     ;
++---------------------------------------------+-----------+
+; Estimated Total logic elements              ; 5,851     ;
+;                                             ;           ;
+; Total combinational functions               ; 3158      ;
+; Logic element usage by number of LUT inputs ;           ;
+;     -- 4 input functions                    ; 2728      ;
+;     -- 3 input functions                    ; 167       ;
+;     -- <=2 input functions                  ; 263       ;
+;                                             ;           ;
+; Logic elements by mode                      ;           ;
+;     -- normal mode                          ; 3022      ;
+;     -- arithmetic mode                      ; 136       ;
+;                                             ;           ;
+; Total registers                             ; 3168      ;
+;     -- Dedicated logic registers            ; 3168      ;
+;     -- I/O registers                        ; 0         ;
+;                                             ;           ;
+; I/O pins                                    ; 205       ;
+; Total memory bits                           ; 10752     ;
+; Embedded Multiplier 9-bit elements          ; 0         ;
+; Maximum fan-out node                        ; clk~input ;
+; Maximum fan-out                             ; 3336      ;
+; Total fan-out                               ; 24561     ;
+; Average fan-out                             ; 3.56      ;
++---------------------------------------------+-----------+
+
+
++-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Resource Utilization by Entity                                                                                                                                                                                                             ;
++-------------------------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+------------------------------------------------------------------------------------------+--------------+
+; Compilation Hierarchy Node                ; LC Combinationals ; LC Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; Full Hierarchy Name                                                                      ; Library Name ;
++-------------------------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+------------------------------------------------------------------------------------------+--------------+
+; |cache_hierarchy_top                      ; 3158 (79)         ; 3168 (98)    ; 10752       ; 0            ; 0       ; 0         ; 205  ; 0            ; |cache_hierarchy_top                                                                     ; work         ;
+;    |cache_l1:u_l1|                        ; 2629 (2629)       ; 2944 (2944)  ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |cache_hierarchy_top|cache_l1:u_l1                                                       ; work         ;
+;    |cache_l2:u_l2|                        ; 432 (432)         ; 113 (113)    ; 10752       ; 0            ; 0       ; 0         ; 0    ; 0            ; |cache_hierarchy_top|cache_l2:u_l2                                                       ; work         ;
+;       |altsyncram:l2_line_ram|            ; 0 (0)             ; 0 (0)        ; 10752       ; 0            ; 0       ; 0         ; 0    ; 0            ; |cache_hierarchy_top|cache_l2:u_l2|altsyncram:l2_line_ram                                ; work         ;
+;          |altsyncram_gg91:auto_generated| ; 0 (0)             ; 0 (0)        ; 10752       ; 0            ; 0       ; 0         ; 0    ; 0            ; |cache_hierarchy_top|cache_l2:u_l2|altsyncram:l2_line_ram|altsyncram_gg91:auto_generated ; work         ;
+;    |hawkeye_l2_policy_dummy:u_policy|     ; 18 (18)           ; 13 (13)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |cache_hierarchy_top|hawkeye_l2_policy_dummy:u_policy                                    ; work         ;
++-------------------------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+------------------------------------------------------------------------------------------+--------------+
+Note: For table entries with two numbers listed, the numbers in parentheses indicate the number of resources of the given type used by the specific entity alone. The numbers listed outside of parentheses indicate the total resources of the given type used by the specific entity and all of its sub-entities in the hierarchy.
+
+
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis RAM Summary                                                                                                                                                    ;
++--------------------------------------------------------------------------------+------+------------------+--------------+--------------+--------------+--------------+-------+------+
+; Name                                                                           ; Type ; Mode             ; Port A Depth ; Port A Width ; Port B Depth ; Port B Width ; Size  ; MIF  ;
++--------------------------------------------------------------------------------+------+------------------+--------------+--------------+--------------+--------------+-------+------+
+; cache_l2:u_l2|altsyncram:l2_line_ram|altsyncram_gg91:auto_generated|ALTSYNCRAM ; AUTO ; Simple Dual Port ; 64           ; 168          ; 64           ; 168          ; 10752 ; None ;
++--------------------------------------------------------------------------------+------+------------------+--------------+--------------+--------------+--------------+-------+------+
+
+
+Encoding Type:  One-Hot
++--------------------------------------------------------------------------------------------------------------------------+
+; State Machine - |cache_hierarchy_top|state                                                                               ;
++-------------------+--------------+-----------------+-----------------+----------------+-------------------+--------------+
+; Name              ; state.S_DONE ; state.S_L1_FILL ; state.S_L2_WAIT ; state.S_L2_REQ ; state.S_L1_LOOKUP ; state.S_IDLE ;
++-------------------+--------------+-----------------+-----------------+----------------+-------------------+--------------+
+; state.S_IDLE      ; 0            ; 0               ; 0               ; 0              ; 0                 ; 0            ;
+; state.S_L1_LOOKUP ; 0            ; 0               ; 0               ; 0              ; 1                 ; 1            ;
+; state.S_L2_REQ    ; 0            ; 0               ; 0               ; 1              ; 0                 ; 1            ;
+; state.S_L2_WAIT   ; 0            ; 0               ; 1               ; 0              ; 0                 ; 1            ;
+; state.S_L1_FILL   ; 0            ; 1               ; 0               ; 0              ; 0                 ; 1            ;
+; state.S_DONE      ; 1            ; 0               ; 0               ; 0              ; 0                 ; 1            ;
++-------------------+--------------+-----------------+-----------------+----------------+-------------------+--------------+
+
+
+Encoding Type:  One-Hot
++-------------------------------------------------------------------------------------------------------------------------------------+
+; State Machine - |cache_hierarchy_top|cache_l2:u_l2|estado                                                                           ;
++--------------------+---------------+-----------------+--------------------+---------------+-------------+-------------+-------------+
+; Name               ; estado.FINISH ; estado.ALLOCATE ; estado.WAIT_VICTIM ; estado.LOOKUP ; estado.READ ; estado.IDLE ; estado.INIT ;
++--------------------+---------------+-----------------+--------------------+---------------+-------------+-------------+-------------+
+; estado.INIT        ; 0             ; 0               ; 0                  ; 0             ; 0           ; 0           ; 0           ;
+; estado.IDLE        ; 0             ; 0               ; 0                  ; 0             ; 0           ; 1           ; 1           ;
+; estado.READ        ; 0             ; 0               ; 0                  ; 0             ; 1           ; 0           ; 1           ;
+; estado.LOOKUP      ; 0             ; 0               ; 0                  ; 1             ; 0           ; 0           ; 1           ;
+; estado.WAIT_VICTIM ; 0             ; 0               ; 1                  ; 0             ; 0           ; 0           ; 1           ;
+; estado.ALLOCATE    ; 0             ; 1               ; 0                  ; 0             ; 0           ; 0           ; 1           ;
+; estado.FINISH      ; 1             ; 0               ; 0                  ; 0             ; 0           ; 0           ; 1           ;
++--------------------+---------------+-----------------+--------------------+---------------+-------------+-------------+-------------+
+
+
++---------------------------------------------------------------------------------+
+; Registers Removed During Synthesis                                              ;
++----------------------------------------+----------------------------------------+
+; Register name                          ; Reason for Removal                     ;
++----------------------------------------+----------------------------------------+
+; resp_l2_access~reg0                    ; Merged with resp_l1_miss~reg0          ;
+; l1_req_addr[10]                        ; Merged with addr_reg[10]               ;
+; l1_req_addr[9]                         ; Merged with addr_reg[9]                ;
+; l1_req_addr[8]                         ; Merged with addr_reg[8]                ;
+; l1_req_addr[7]                         ; Merged with addr_reg[7]                ;
+; l1_req_addr[6]                         ; Merged with addr_reg[6]                ;
+; l1_req_addr[5]                         ; Merged with addr_reg[5]                ;
+; l1_req_addr[31]                        ; Merged with addr_reg[31]               ;
+; l1_req_addr[30]                        ; Merged with addr_reg[30]               ;
+; l1_req_addr[29]                        ; Merged with addr_reg[29]               ;
+; l1_req_addr[28]                        ; Merged with addr_reg[28]               ;
+; l1_req_addr[27]                        ; Merged with addr_reg[27]               ;
+; l1_req_addr[26]                        ; Merged with addr_reg[26]               ;
+; l1_req_addr[25]                        ; Merged with addr_reg[25]               ;
+; l1_req_addr[24]                        ; Merged with addr_reg[24]               ;
+; l1_req_addr[23]                        ; Merged with addr_reg[23]               ;
+; l1_req_addr[22]                        ; Merged with addr_reg[22]               ;
+; l1_req_addr[21]                        ; Merged with addr_reg[21]               ;
+; l1_req_addr[20]                        ; Merged with addr_reg[20]               ;
+; l1_req_addr[19]                        ; Merged with addr_reg[19]               ;
+; l1_req_addr[18]                        ; Merged with addr_reg[18]               ;
+; l1_req_addr[17]                        ; Merged with addr_reg[17]               ;
+; l1_req_addr[16]                        ; Merged with addr_reg[16]               ;
+; l1_req_addr[15]                        ; Merged with addr_reg[15]               ;
+; l1_req_addr[14]                        ; Merged with addr_reg[14]               ;
+; l1_req_addr[13]                        ; Merged with addr_reg[13]               ;
+; l1_req_addr[12]                        ; Merged with addr_reg[12]               ;
+; l1_req_addr[11]                        ; Merged with addr_reg[11]               ;
+; cache_l2:u_l2|line_rd_addr[0]          ; Merged with cache_l2:u_l2|cur_index[0] ;
+; cache_l2:u_l2|line_rd_addr[1]          ; Merged with cache_l2:u_l2|cur_index[1] ;
+; cache_l2:u_l2|line_rd_addr[2]          ; Merged with cache_l2:u_l2|cur_index[2] ;
+; cache_l2:u_l2|line_rd_addr[3]          ; Merged with cache_l2:u_l2|cur_index[3] ;
+; cache_l2:u_l2|line_rd_addr[4]          ; Merged with cache_l2:u_l2|cur_index[4] ;
+; cache_l2:u_l2|line_rd_addr[5]          ; Merged with cache_l2:u_l2|cur_index[5] ;
+; state~3                                ; Lost fanout                            ;
+; state~4                                ; Lost fanout                            ;
+; state~5                                ; Lost fanout                            ;
+; cache_l2:u_l2|estado~7                 ; Lost fanout                            ;
+; cache_l2:u_l2|estado~8                 ; Lost fanout                            ;
+; cache_l2:u_l2|estado~9                 ; Lost fanout                            ;
+; Total Number of Removed Registers = 40 ;                                        ;
++----------------------------------------+----------------------------------------+
+
+
++------------------------------------------------------+
+; General Register Statistics                          ;
++----------------------------------------------+-------+
+; Statistic                                    ; Value ;
++----------------------------------------------+-------+
+; Total registers                              ; 3168  ;
+; Number of registers using Synchronous Clear  ; 357   ;
+; Number of registers using Synchronous Load   ; 64    ;
+; Number of registers using Asynchronous Clear ; 0     ;
+; Number of registers using Asynchronous Load  ; 0     ;
+; Number of registers using Clock Enable       ; 2944  ;
+; Number of registers using Preset             ; 0     ;
++----------------------------------------------+-------+
+
+
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Multiplexer Restructuring Statistics (Restructuring Performed)                                                                                                                        ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+-------------------------------------------------------------------------+
+; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output                                              ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+-------------------------------------------------------------------------+
+; 3:1                ; 3 bits    ; 6 LEs         ; 3 LEs                ; 3 LEs                  ; Yes        ; |cache_hierarchy_top|cache_l2:u_l2|pol_set[1]                           ;
+; 4:1                ; 27 bits   ; 54 LEs        ; 27 LEs               ; 27 LEs                 ; Yes        ; |cache_hierarchy_top|addr_reg[6]                                        ;
+; 4:1                ; 27 bits   ; 54 LEs        ; 27 LEs               ; 27 LEs                 ; Yes        ; |cache_hierarchy_top|l1_fill_addr[12]                                   ;
+; 4:1                ; 32 bits   ; 64 LEs        ; 32 LEs               ; 32 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|hit_count[6]                         ;
+; 4:1                ; 32 bits   ; 64 LEs        ; 32 LEs               ; 32 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|miss_count[6]                        ;
+; 4:1                ; 26 bits   ; 52 LEs        ; 26 LEs               ; 26 LEs                 ; Yes        ; |cache_hierarchy_top|l2_req_addr[21]                                    ;
+; 4:1                ; 6 bits    ; 12 LEs        ; 6 LEs                ; 6 LEs                  ; Yes        ; |cache_hierarchy_top|cache_l2:u_l2|init_addr[0]                         ;
+; 4:1                ; 26 bits   ; 52 LEs        ; 26 LEs               ; 26 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l2:u_l2|cur_tag[15]                          ;
+; 4:1                ; 32 bits   ; 64 LEs        ; 32 LEs               ; 32 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l2:u_l2|hit_count[6]                         ;
+; 4:1                ; 32 bits   ; 64 LEs        ; 32 LEs               ; 32 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l2:u_l2|miss_count[9]                        ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[63][4]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[63][13]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[62][17]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[62][4]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[61][19]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[61][0]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[60][11]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[60][15]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[59][10]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[59][12]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[58][19]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[58][15]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[57][13]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[57][8]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[56][11]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[56][17]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[55][5]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[55][10]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[54][4]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[54][18]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[53][5]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[53][7]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[52][5]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[52][7]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[51][17]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[51][7]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[50][12]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[50][7]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[49][1]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[49][7]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[48][9]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[48][19]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[47][14]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[47][13]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[46][6]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[46][7]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[45][18]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[45][7]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[44][12]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[44][17]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[43][14]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[43][7]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[42][1]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[42][20]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[41][9]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[41][7]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[40][0]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[40][4]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[39][0]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[39][15]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[38][3]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[38][7]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[37][8]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[37][11]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[36][2]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[36][1]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[35][13]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[35][16]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[34][13]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[34][11]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[33][13]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[33][10]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[32][18]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[32][7]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[31][10]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[31][7]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[30][14]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[30][17]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[29][5]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[29][2]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[28][3]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[28][16]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[27][2]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[27][7]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[26][2]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[26][7]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[25][14]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[25][7]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[24][13]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[24][0]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[23][3]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[23][16]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[22][11]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[22][3]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[21][16]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[21][4]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[20][20]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[20][20]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[19][10]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[19][3]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[18][10]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[18][9]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[17][2]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[17][5]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[16][10]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[16][5]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[15][10]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[15][1]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[14][13]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[14][8]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[13][10]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[13][1]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[12][19]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[12][13]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[11][10]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[11][7]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[10][17]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[10][20]                         ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[9][15]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[9][6]                           ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[8][1]                           ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[8][13]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[7][20]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[7][0]                           ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[6][11]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[6][18]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[5][14]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[5][0]                           ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[4][18]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[4][16]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[3][17]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[3][18]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[2][12]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[2][14]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[1][15]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[1][13]                          ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag0[0][7]                           ;
+; 5:1                ; 21 bits   ; 63 LEs        ; 21 LEs               ; 42 LEs                 ; Yes        ; |cache_hierarchy_top|cache_l1:u_l1|tag1[0][5]                           ;
+; 5:1                ; 3 bits    ; 9 LEs         ; 3 LEs                ; 6 LEs                  ; Yes        ; |cache_hierarchy_top|hawkeye_l2_policy_dummy:u_policy|pol_victim_way[1] ;
+; 5:1                ; 8 bits    ; 24 LEs        ; 8 LEs                ; 16 LEs                 ; Yes        ; |cache_hierarchy_top|hawkeye_l2_policy_dummy:u_policy|delay_count[6]    ;
+; 7:1                ; 2 bits    ; 8 LEs         ; 2 LEs                ; 6 LEs                  ; Yes        ; |cache_hierarchy_top|resp_l2_hit~reg0                                   ;
+; 4:1                ; 20 bits   ; 40 LEs        ; 40 LEs               ; 0 LEs                  ; No         ; |cache_hierarchy_top|cache_l2:u_l2|line_wr_data[1]                      ;
+; 4:1                ; 20 bits   ; 40 LEs        ; 40 LEs               ; 0 LEs                  ; No         ; |cache_hierarchy_top|cache_l2:u_l2|line_wr_data[33]                     ;
+; 4:1                ; 20 bits   ; 40 LEs        ; 40 LEs               ; 0 LEs                  ; No         ; |cache_hierarchy_top|cache_l2:u_l2|line_wr_data[42]                     ;
+; 4:1                ; 20 bits   ; 40 LEs        ; 40 LEs               ; 0 LEs                  ; No         ; |cache_hierarchy_top|cache_l2:u_l2|line_wr_data[78]                     ;
+; 4:1                ; 20 bits   ; 40 LEs        ; 40 LEs               ; 0 LEs                  ; No         ; |cache_hierarchy_top|cache_l2:u_l2|line_wr_data[95]                     ;
+; 4:1                ; 20 bits   ; 40 LEs        ; 40 LEs               ; 0 LEs                  ; No         ; |cache_hierarchy_top|cache_l2:u_l2|line_wr_data[109]                    ;
+; 4:1                ; 20 bits   ; 40 LEs        ; 40 LEs               ; 0 LEs                  ; No         ; |cache_hierarchy_top|cache_l2:u_l2|line_wr_data[126]                    ;
+; 4:1                ; 20 bits   ; 40 LEs        ; 40 LEs               ; 0 LEs                  ; No         ; |cache_hierarchy_top|cache_l2:u_l2|line_wr_data[162]                    ;
+; 64:1               ; 44 bits   ; 1848 LEs      ; 1848 LEs             ; 0 LEs                  ; No         ; |cache_hierarchy_top|cache_l1:u_l1|Mux19                                ;
+; 64:1               ; 2 bits    ; 84 LEs        ; 84 LEs               ; 0 LEs                  ; No         ; |cache_hierarchy_top|cache_l1:u_l1|Mux46                                ;
+; 8:1                ; 2 bits    ; 10 LEs        ; 6 LEs                ; 4 LEs                  ; No         ; |cache_hierarchy_top|cache_l2:u_l2|estado                               ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+-------------------------------------------------------------------------+
+
+
++--------------------------------------------------------------------------------------------+
+; Source assignments for cache_l2:u_l2|altsyncram:l2_line_ram|altsyncram_gg91:auto_generated ;
++---------------------------------+--------------------+------+------------------------------+
+; Assignment                      ; Value              ; From ; To                           ;
++---------------------------------+--------------------+------+------------------------------+
+; OPTIMIZE_POWER_DURING_SYNTHESIS ; NORMAL_COMPILATION ; -    ; -                            ;
++---------------------------------+--------------------+------+------------------------------+
+
+
++-------------------------------------------------------------------------------------+
+; Parameter Settings for User Entity Instance: Top-level Entity: |cache_hierarchy_top ;
++-------------------+----------+------------------------------------------------------+
+; Parameter Name    ; Value    ; Type                                                 ;
++-------------------+----------+------------------------------------------------------+
+; L2_WAYS           ; 8        ; Signed Integer                                       ;
+; L2_WAY_BITS       ; 3        ; Signed Integer                                       ;
+; OPTGEN_CACHE_SIZE ; 00001000 ; Unsigned Binary                                      ;
++-------------------+----------+------------------------------------------------------+
+Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
+
+
++------------------------------------------------------------+
+; Parameter Settings for User Entity Instance: cache_l1:u_l1 ;
++-------------------+-------+--------------------------------+
+; Parameter Name    ; Value ; Type                           ;
++-------------------+-------+--------------------------------+
+; ADDR_WIDTH        ; 32    ; Signed Integer                 ;
+; OFFSET_BITS       ; 5     ; Signed Integer                 ;
+; INDEX_BITS        ; 6     ; Signed Integer                 ;
+; NUM_SETS          ; 64    ; Signed Integer                 ;
+; TAG_BITS          ; 21    ; Signed Integer                 ;
+; AUTO_FILL_ON_MISS ; 0     ; Signed Integer                 ;
++-------------------+-------+--------------------------------+
+Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
+
+
++------------------------------------------------------------+
+; Parameter Settings for User Entity Instance: cache_l2:u_l2 ;
++----------------+-------+-----------------------------------+
+; Parameter Name ; Value ; Type                              ;
++----------------+-------+-----------------------------------+
+; ADDR_WIDTH     ; 32    ; Signed Integer                    ;
+; OFFSET_BITS    ; 6     ; Signed Integer                    ;
+; INDEX_BITS     ; 6     ; Signed Integer                    ;
+; NUM_SETS       ; 64    ; Signed Integer                    ;
+; TAG_BITS       ; 20    ; Signed Integer                    ;
+; WAYS           ; 8     ; Signed Integer                    ;
+; WAY_BITS       ; 3     ; Signed Integer                    ;
++----------------+-------+-----------------------------------+
+Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
+
+
++-----------------------------------------------------------------------------------+
+; Parameter Settings for User Entity Instance: cache_l2:u_l2|altsyncram:l2_line_ram ;
++------------------------------------+----------------------+-----------------------+
+; Parameter Name                     ; Value                ; Type                  ;
++------------------------------------+----------------------+-----------------------+
+; BYTE_SIZE_BLOCK                    ; 8                    ; Untyped               ;
+; AUTO_CARRY_CHAINS                  ; ON                   ; AUTO_CARRY            ;
+; IGNORE_CARRY_BUFFERS               ; OFF                  ; IGNORE_CARRY          ;
+; AUTO_CASCADE_CHAINS                ; ON                   ; AUTO_CASCADE          ;
+; IGNORE_CASCADE_BUFFERS             ; OFF                  ; IGNORE_CASCADE        ;
+; WIDTH_BYTEENA                      ; 1                    ; Untyped               ;
+; OPERATION_MODE                     ; DUAL_PORT            ; Untyped               ;
+; WIDTH_A                            ; 168                  ; Signed Integer        ;
+; WIDTHAD_A                          ; 6                    ; Signed Integer        ;
+; NUMWORDS_A                         ; 64                   ; Signed Integer        ;
+; OUTDATA_REG_A                      ; UNREGISTERED         ; Untyped               ;
+; ADDRESS_ACLR_A                     ; NONE                 ; Untyped               ;
+; OUTDATA_ACLR_A                     ; NONE                 ; Untyped               ;
+; WRCONTROL_ACLR_A                   ; NONE                 ; Untyped               ;
+; INDATA_ACLR_A                      ; NONE                 ; Untyped               ;
+; BYTEENA_ACLR_A                     ; NONE                 ; Untyped               ;
+; WIDTH_B                            ; 168                  ; Signed Integer        ;
+; WIDTHAD_B                          ; 6                    ; Signed Integer        ;
+; NUMWORDS_B                         ; 64                   ; Signed Integer        ;
+; INDATA_REG_B                       ; CLOCK1               ; Untyped               ;
+; WRCONTROL_WRADDRESS_REG_B          ; CLOCK1               ; Untyped               ;
+; RDCONTROL_REG_B                    ; CLOCK1               ; Untyped               ;
+; ADDRESS_REG_B                      ; CLOCK0               ; Untyped               ;
+; OUTDATA_REG_B                      ; UNREGISTERED         ; Untyped               ;
+; BYTEENA_REG_B                      ; CLOCK1               ; Untyped               ;
+; INDATA_ACLR_B                      ; NONE                 ; Untyped               ;
+; WRCONTROL_ACLR_B                   ; NONE                 ; Untyped               ;
+; ADDRESS_ACLR_B                     ; NONE                 ; Untyped               ;
+; OUTDATA_ACLR_B                     ; NONE                 ; Untyped               ;
+; RDCONTROL_ACLR_B                   ; NONE                 ; Untyped               ;
+; BYTEENA_ACLR_B                     ; NONE                 ; Untyped               ;
+; WIDTH_BYTEENA_A                    ; 1                    ; Untyped               ;
+; WIDTH_BYTEENA_B                    ; 1                    ; Untyped               ;
+; RAM_BLOCK_TYPE                     ; AUTO                 ; Untyped               ;
+; BYTE_SIZE                          ; 8                    ; Untyped               ;
+; READ_DURING_WRITE_MODE_MIXED_PORTS ; OLD_DATA             ; Untyped               ;
+; READ_DURING_WRITE_MODE_PORT_A      ; NEW_DATA_NO_NBE_READ ; Untyped               ;
+; READ_DURING_WRITE_MODE_PORT_B      ; NEW_DATA_NO_NBE_READ ; Untyped               ;
+; INIT_FILE                          ; UNUSED               ; Untyped               ;
+; INIT_FILE_LAYOUT                   ; PORT_A               ; Untyped               ;
+; MAXIMUM_DEPTH                      ; 0                    ; Untyped               ;
+; CLOCK_ENABLE_INPUT_A               ; NORMAL               ; Untyped               ;
+; CLOCK_ENABLE_INPUT_B               ; NORMAL               ; Untyped               ;
+; CLOCK_ENABLE_OUTPUT_A              ; NORMAL               ; Untyped               ;
+; CLOCK_ENABLE_OUTPUT_B              ; NORMAL               ; Untyped               ;
+; CLOCK_ENABLE_CORE_A                ; USE_INPUT_CLKEN      ; Untyped               ;
+; CLOCK_ENABLE_CORE_B                ; USE_INPUT_CLKEN      ; Untyped               ;
+; ENABLE_ECC                         ; FALSE                ; Untyped               ;
+; ECC_PIPELINE_STAGE_ENABLED         ; FALSE                ; Untyped               ;
+; WIDTH_ECCSTATUS                    ; 3                    ; Untyped               ;
+; DEVICE_FAMILY                      ; Cyclone III          ; Untyped               ;
+; CBXI_PARAMETER                     ; altsyncram_gg91      ; Untyped               ;
++------------------------------------+----------------------+-----------------------+
+Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
+
+
++-------------------------------------------------------------------------------+
+; Parameter Settings for User Entity Instance: hawkeye_l2_policy_dummy:u_policy ;
++----------------+-------+------------------------------------------------------+
+; Parameter Name ; Value ; Type                                                 ;
++----------------+-------+------------------------------------------------------+
+; SET_BITS       ; 6     ; Signed Integer                                       ;
+; PC_WIDTH       ; 32    ; Signed Integer                                       ;
+; ADDR_WIDTH     ; 32    ; Signed Integer                                       ;
+; WAY_BITS       ; 3     ; Signed Integer                                       ;
+; RESPONSE_DELAY ; 2     ; Signed Integer                                       ;
++----------------+-------+------------------------------------------------------+
+Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
+
+
++----------------------------------------------------------------------------------+
+; altsyncram Parameter Settings by Entity Instance                                 ;
++-------------------------------------------+--------------------------------------+
+; Name                                      ; Value                                ;
++-------------------------------------------+--------------------------------------+
+; Number of entity instances                ; 1                                    ;
+; Entity Instance                           ; cache_l2:u_l2|altsyncram:l2_line_ram ;
+;     -- OPERATION_MODE                     ; DUAL_PORT                            ;
+;     -- WIDTH_A                            ; 168                                  ;
+;     -- NUMWORDS_A                         ; 64                                   ;
+;     -- OUTDATA_REG_A                      ; UNREGISTERED                         ;
+;     -- WIDTH_B                            ; 168                                  ;
+;     -- NUMWORDS_B                         ; 64                                   ;
+;     -- ADDRESS_REG_B                      ; CLOCK0                               ;
+;     -- OUTDATA_REG_B                      ; UNREGISTERED                         ;
+;     -- RAM_BLOCK_TYPE                     ; AUTO                                 ;
+;     -- READ_DURING_WRITE_MODE_MIXED_PORTS ; OLD_DATA                             ;
++-------------------------------------------+--------------------------------------+
+
+
++----------------------------------------------------------------------------------------------------------------+
+; Port Connectivity Checks: "cache_l1:u_l1"                                                                      ;
++------+--------+----------+-------------------------------------------------------------------------------------+
+; Port ; Type   ; Severity ; Details                                                                             ;
++------+--------+----------+-------------------------------------------------------------------------------------+
+; miss ; Output ; Info     ; Connected to dangling logic. Logic that only feeds a dangling port will be removed. ;
++------+--------+----------+-------------------------------------------------------------------------------------+
+
+
++-------------------------------+
+; Elapsed Time Per Partition    ;
++----------------+--------------+
+; Partition Name ; Elapsed Time ;
++----------------+--------------+
+; Top            ; 00:00:34     ;
++----------------+--------------+
+
+
++-------------------------------+
+; Analysis & Synthesis Messages ;
++-------------------------------+
+Info: *******************************************************************
+Info: Running Quartus II 64-Bit Analysis & Synthesis
+    Info: Version 13.1.0 Build 162 10/23/2013 SJ Web Edition
+    Info: Processing started: Wed Jul 15 21:28:34 2026
+Info: Command: quartus_map --read_settings_files=on --write_settings_files=off cache_hierarchy_top -c cache_hierarchy_top
+Warning (20028): Parallel compilation is not licensed and has been disabled
+Info (12021): Found 1 design units, including 1 entities, in source file cache_hierarchy_top_baseline.v
+    Info (12023): Found entity 1: cache_hierarchy_top
+Info (12021): Found 1 design units, including 1 entities, in source file /users/tesouraria/desktop/pi iv/riscv-hawkeye-cache-fpga-main/rtl/hawkeye/hawkeye_l2_policy_dummy.v
+    Info (12023): Found entity 1: hawkeye_l2_policy_dummy
+Info (12021): Found 1 design units, including 1 entities, in source file /users/tesouraria/desktop/pi iv/riscv-hawkeye-cache-fpga-main/rtl/hawkeye/saturating_counter_unit.v
+    Info (12023): Found entity 1: saturating_counter_unit
+Info (12021): Found 1 design units, including 1 entities, in source file /users/tesouraria/desktop/pi iv/riscv-hawkeye-cache-fpga-main/rtl/hawkeye/sampler_victim_selector.v
+    Info (12023): Found entity 1: sampler_victim_selector
+Info (12021): Found 1 design units, including 1 entities, in source file /users/tesouraria/desktop/pi iv/riscv-hawkeye-cache-fpga-main/rtl/hawkeye/sampler_find_unit.v
+    Info (12023): Found entity 1: sampler_find_unit
+Info (12021): Found 1 design units, including 1 entities, in source file /users/tesouraria/desktop/pi iv/riscv-hawkeye-cache-fpga-main/rtl/hawkeye/sampler.v
+    Info (12023): Found entity 1: sampler
+Info (12021): Found 1 design units, including 1 entities, in source file /users/tesouraria/desktop/pi iv/riscv-hawkeye-cache-fpga-main/rtl/hawkeye/rrip_victim_selector.v
+    Info (12023): Found entity 1: rrip_victim_selector
+Info (12021): Found 1 design units, including 1 entities, in source file /users/tesouraria/desktop/pi iv/riscv-hawkeye-cache-fpga-main/rtl/hawkeye/rrip_update_unit.v
+    Info (12023): Found entity 1: rrip_update_unit
+Info (12021): Found 1 design units, including 1 entities, in source file /users/tesouraria/desktop/pi iv/riscv-hawkeye-cache-fpga-main/rtl/hawkeye/rrip_aging_unit.v
+    Info (12023): Found entity 1: rrip_aging_unit
+Info (12021): Found 1 design units, including 1 entities, in source file /users/tesouraria/desktop/pi iv/riscv-hawkeye-cache-fpga-main/rtl/hawkeye/optgen.v
+    Info (12023): Found entity 1: optgen
+Warning (10090): Verilog HDL syntax warning at hawkeye_training_controller.v(137): extra block comment delimiter characters /* within block comment
+Info (12021): Found 1 design units, including 1 entities, in source file /users/tesouraria/desktop/pi iv/riscv-hawkeye-cache-fpga-main/rtl/hawkeye/hawkeye_training_controller.v
+    Info (12023): Found entity 1: hawkeye_training_controller
+Info (12021): Found 1 design units, including 1 entities, in source file /users/tesouraria/desktop/pi iv/riscv-hawkeye-cache-fpga-main/rtl/hawkeye/hawkeye_top.v
+    Info (12023): Found entity 1: hawkeye_top
+Info (12021): Found 1 design units, including 1 entities, in source file /users/tesouraria/desktop/pi iv/riscv-hawkeye-cache-fpga-main/rtl/hawkeye/hawkeye_predictor.v
+    Info (12023): Found entity 1: hawkeye_predictor
+Info (12021): Found 1 design units, including 1 entities, in source file /users/tesouraria/desktop/pi iv/riscv-hawkeye-cache-fpga-main/rtl/hawkeye/hawkeye_hash_index.v
+    Info (12023): Found entity 1: hawkeye_hash_index
+Info (12021): Found 1 design units, including 1 entities, in source file /users/tesouraria/desktop/pi iv/riscv-hawkeye-cache-fpga-main/rtl/cache/lru_policy_l2.v
+    Info (12023): Found entity 1: lru_policy_l2
+Info (12021): Found 1 design units, including 1 entities, in source file /users/tesouraria/desktop/pi iv/riscv-hawkeye-cache-fpga-main/rtl/cache/cache_l2.v
+    Info (12023): Found entity 1: cache_l2
+Info (12021): Found 1 design units, including 1 entities, in source file /users/tesouraria/desktop/pi iv/riscv-hawkeye-cache-fpga-main/rtl/cache/cache_l1.v
+    Info (12023): Found entity 1: cache_l1
+Info (12127): Elaborating entity "cache_hierarchy_top" for the top level hierarchy
+Info (12128): Elaborating entity "cache_l1" for hierarchy "cache_l1:u_l1"
+Warning (10036): Verilog HDL or VHDL warning at cache_l1.v(72): object "offset" assigned a value but never read
+Info (12128): Elaborating entity "cache_l2" for hierarchy "cache_l2:u_l2"
+Warning (10036): Verilog HDL or VHDL warning at cache_l2.v(378): object "cur_hit" assigned a value but never read
+Warning (10036): Verilog HDL or VHDL warning at cache_l2.v(379): object "cur_hit_way" assigned a value but never read
+Warning (10036): Verilog HDL or VHDL warning at cache_l2.v(444): object "hit_vec" assigned a value but never read
+Warning (10240): Verilog HDL Always Construct warning at cache_l2.v(487): inferring latch(es) for variable "u", which holds its previous value in one or more paths through the always construct
+Info (12128): Elaborating entity "altsyncram" for hierarchy "cache_l2:u_l2|altsyncram:l2_line_ram"
+Info (12130): Elaborated megafunction instantiation "cache_l2:u_l2|altsyncram:l2_line_ram"
+Info (12133): Instantiated megafunction "cache_l2:u_l2|altsyncram:l2_line_ram" with the following parameter:
+    Info (12134): Parameter "operation_mode" = "DUAL_PORT"
+    Info (12134): Parameter "width_a" = "168"
+    Info (12134): Parameter "widthad_a" = "6"
+    Info (12134): Parameter "numwords_a" = "64"
+    Info (12134): Parameter "width_b" = "168"
+    Info (12134): Parameter "widthad_b" = "6"
+    Info (12134): Parameter "numwords_b" = "64"
+    Info (12134): Parameter "address_reg_b" = "CLOCK0"
+    Info (12134): Parameter "outdata_reg_b" = "UNREGISTERED"
+    Info (12134): Parameter "read_during_write_mode_mixed_ports" = "OLD_DATA"
+    Info (12134): Parameter "ram_block_type" = "AUTO"
+    Info (12134): Parameter "intended_device_family" = "Cyclone III"
+Info (12021): Found 1 design units, including 1 entities, in source file db/altsyncram_gg91.tdf
+    Info (12023): Found entity 1: altsyncram_gg91
+Info (12128): Elaborating entity "altsyncram_gg91" for hierarchy "cache_l2:u_l2|altsyncram:l2_line_ram|altsyncram_gg91:auto_generated"
+Warning (287013): Variable or input pin "data_b" is defined but never used.
+Info (12128): Elaborating entity "hawkeye_l2_policy_dummy" for hierarchy "hawkeye_l2_policy_dummy:u_policy"
+Info (286030): Timing-Driven Synthesis is running
+Info (17049): 6 registers lost all their fanouts during netlist optimizations.
+Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
+    Info (16011): Adding 0 node(s), including 0 DDIO, 0 PLL, 0 transceiver and 0 LCELL
+Warning (21074): Design contains 37 input pin(s) that do not drive logic
+    Warning (15610): No output dependent on input pin "req_addr[0]"
+    Warning (15610): No output dependent on input pin "req_addr[1]"
+    Warning (15610): No output dependent on input pin "req_addr[2]"
+    Warning (15610): No output dependent on input pin "req_addr[3]"
+    Warning (15610): No output dependent on input pin "req_addr[4]"
+    Warning (15610): No output dependent on input pin "req_pc[0]"
+    Warning (15610): No output dependent on input pin "req_pc[1]"
+    Warning (15610): No output dependent on input pin "req_pc[2]"
+    Warning (15610): No output dependent on input pin "req_pc[3]"
+    Warning (15610): No output dependent on input pin "req_pc[4]"
+    Warning (15610): No output dependent on input pin "req_pc[5]"
+    Warning (15610): No output dependent on input pin "req_pc[6]"
+    Warning (15610): No output dependent on input pin "req_pc[7]"
+    Warning (15610): No output dependent on input pin "req_pc[8]"
+    Warning (15610): No output dependent on input pin "req_pc[9]"
+    Warning (15610): No output dependent on input pin "req_pc[10]"
+    Warning (15610): No output dependent on input pin "req_pc[11]"
+    Warning (15610): No output dependent on input pin "req_pc[12]"
+    Warning (15610): No output dependent on input pin "req_pc[13]"
+    Warning (15610): No output dependent on input pin "req_pc[14]"
+    Warning (15610): No output dependent on input pin "req_pc[15]"
+    Warning (15610): No output dependent on input pin "req_pc[16]"
+    Warning (15610): No output dependent on input pin "req_pc[17]"
+    Warning (15610): No output dependent on input pin "req_pc[18]"
+    Warning (15610): No output dependent on input pin "req_pc[19]"
+    Warning (15610): No output dependent on input pin "req_pc[20]"
+    Warning (15610): No output dependent on input pin "req_pc[21]"
+    Warning (15610): No output dependent on input pin "req_pc[22]"
+    Warning (15610): No output dependent on input pin "req_pc[23]"
+    Warning (15610): No output dependent on input pin "req_pc[24]"
+    Warning (15610): No output dependent on input pin "req_pc[25]"
+    Warning (15610): No output dependent on input pin "req_pc[26]"
+    Warning (15610): No output dependent on input pin "req_pc[27]"
+    Warning (15610): No output dependent on input pin "req_pc[28]"
+    Warning (15610): No output dependent on input pin "req_pc[29]"
+    Warning (15610): No output dependent on input pin "req_pc[30]"
+    Warning (15610): No output dependent on input pin "req_pc[31]"
+Info (21057): Implemented 6273 device resources after synthesis - the final resource count might be different
+    Info (21058): Implemented 67 input pins
+    Info (21059): Implemented 138 output pins
+    Info (21061): Implemented 5900 logic cells
+    Info (21064): Implemented 168 RAM segments
+Info: Quartus II 64-Bit Analysis & Synthesis was successful. 0 errors, 46 warnings
+    Info: Peak virtual memory: 558 megabytes
+    Info: Processing ended: Wed Jul 15 21:29:12 2026
+    Info: Elapsed time: 00:00:38
+    Info: Total CPU time (on all processors): 00:00:37
+
+
